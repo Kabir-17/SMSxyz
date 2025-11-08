@@ -1,0 +1,30 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ScheduleRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const auth_1 = require("../../middlewares/auth");
+const user_interface_1 = require("../user/user.interface");
+const validateRequest_1 = require("../../middlewares/validateRequest");
+const schedule_controller_1 = require("./schedule.controller");
+const schedule_validation_1 = require("./schedule.validation");
+const router = express_1.default.Router();
+router.post("/", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN), auth_1.enforceSchoolIsolation, (0, validateRequest_1.validateRequest)(schedule_validation_1.ScheduleValidation.createScheduleValidationSchema), schedule_controller_1.ScheduleController.createSchedule);
+router.post("/bulk", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN), auth_1.enforceSchoolIsolation, (0, validateRequest_1.validateRequest)(schedule_validation_1.ScheduleValidation.bulkCreateScheduleValidationSchema), schedule_controller_1.ScheduleController.bulkCreateSchedules);
+router.get("/", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN, user_interface_1.UserRole.TEACHER, user_interface_1.UserRole.STUDENT, user_interface_1.UserRole.PARENT, user_interface_1.UserRole.ACCOUNTANT), auth_1.enforceSchoolIsolation, schedule_controller_1.ScheduleController.getAllSchedules);
+router.get("/school/:schoolId/overview", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN, user_interface_1.UserRole.TEACHER), schedule_controller_1.ScheduleController.getSchoolScheduleOverview);
+router.get("/stats/:schoolId", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN), schedule_controller_1.ScheduleController.getScheduleStats);
+router.get("/weekly/:schoolId/:grade/:section", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN, user_interface_1.UserRole.TEACHER, user_interface_1.UserRole.STUDENT, user_interface_1.UserRole.PARENT, user_interface_1.UserRole.ACCOUNTANT), schedule_controller_1.ScheduleController.getWeeklySchedule);
+router.get("/class/:schoolId/:grade/:section", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN, user_interface_1.UserRole.TEACHER, user_interface_1.UserRole.STUDENT, user_interface_1.UserRole.PARENT, user_interface_1.UserRole.ACCOUNTANT), schedule_controller_1.ScheduleController.getSchedulesByClass);
+router.delete("/class/:grade/:section", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN), auth_1.enforceSchoolIsolation, schedule_controller_1.ScheduleController.clearClassSchedule);
+router.get("/teacher/:teacherId", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN, user_interface_1.UserRole.TEACHER, user_interface_1.UserRole.STUDENT, user_interface_1.UserRole.PARENT, user_interface_1.UserRole.ACCOUNTANT), schedule_controller_1.ScheduleController.getTeacherSchedule);
+router.get("/teacher/:teacherId/schedules", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN, user_interface_1.UserRole.TEACHER, user_interface_1.UserRole.STUDENT, user_interface_1.UserRole.PARENT, user_interface_1.UserRole.ACCOUNTANT), schedule_controller_1.ScheduleController.getSchedulesByTeacher);
+router.get("/subject/:subjectId", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN, user_interface_1.UserRole.TEACHER, user_interface_1.UserRole.STUDENT, user_interface_1.UserRole.PARENT, user_interface_1.UserRole.ACCOUNTANT), schedule_controller_1.ScheduleController.getSchedulesBySubject);
+router.patch("/:scheduleId/substitute/:periodNumber", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN), (0, validateRequest_1.validateRequest)(schedule_validation_1.ScheduleValidation.assignSubstituteTeacherValidationSchema), schedule_controller_1.ScheduleController.assignSubstituteTeacher);
+router.get("/:id", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN, user_interface_1.UserRole.TEACHER, user_interface_1.UserRole.STUDENT, user_interface_1.UserRole.PARENT, user_interface_1.UserRole.ACCOUNTANT), schedule_controller_1.ScheduleController.getScheduleById);
+router.patch("/:id", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN), auth_1.enforceSchoolIsolation, (0, validateRequest_1.validateRequest)(schedule_validation_1.ScheduleValidation.updateScheduleValidationSchema), schedule_controller_1.ScheduleController.updateSchedule);
+router.delete("/:id", auth_1.authenticate, (0, auth_1.authorize)(user_interface_1.UserRole.SUPERADMIN, user_interface_1.UserRole.ADMIN), auth_1.enforceSchoolIsolation, schedule_controller_1.ScheduleController.deleteSchedule);
+exports.ScheduleRoutes = router;
+//# sourceMappingURL=schedule.route.js.map

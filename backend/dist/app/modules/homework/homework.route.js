@@ -1,0 +1,34 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.homeworkRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const homework_controller_1 = require("./homework.controller");
+const auth_1 = require("../../middlewares/auth");
+const validateRequest_1 = require("../../middlewares/validateRequest");
+const homework_validation_1 = require("./homework.validation");
+const fileUpload_1 = require("../../middlewares/fileUpload");
+const parseFormData_1 = require("../../middlewares/parseFormData");
+const addTeacherContext_1 = require("../../middlewares/addTeacherContext");
+const router = express_1.default.Router();
+router.post('/create', auth_1.authenticate, (0, auth_1.authorize)('teacher'), fileUpload_1.uploadHomeworkAttachments, parseFormData_1.parseHomeworkFormData, addTeacherContext_1.addTeacherContext, (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.createHomeworkValidation), homework_controller_1.HomeworkController.createHomework);
+router.patch('/:id', auth_1.authenticate, (0, auth_1.authorize)('teacher'), fileUpload_1.uploadHomeworkAttachments, parseFormData_1.parseHomeworkFormData, addTeacherContext_1.addTeacherContext, (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.homeworkIdParamValidation), (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.updateHomeworkValidation), homework_controller_1.HomeworkController.updateHomework);
+router.delete('/:id', auth_1.authenticate, (0, auth_1.authorize)('teacher'), (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.homeworkIdParamValidation), homework_controller_1.HomeworkController.deleteHomework);
+router.patch('/:id/publish', auth_1.authenticate, (0, auth_1.authorize)('teacher'), (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.homeworkIdParamValidation), homework_controller_1.HomeworkController.publishHomework);
+router.get('/teacher/my-homework', auth_1.authenticate, (0, auth_1.authorize)('teacher'), homework_controller_1.HomeworkController.getHomeworkForTeacher);
+router.get('/:id/submissions', auth_1.authenticate, (0, auth_1.authorize)('teacher'), (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.homeworkIdParamValidation), homework_controller_1.HomeworkController.getHomeworkSubmissions);
+router.post('/grade', auth_1.authenticate, (0, auth_1.authorize)('teacher'), (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.gradeHomeworkValidation), homework_controller_1.HomeworkController.gradeHomeworkSubmission);
+router.post('/request-revision', auth_1.authenticate, (0, auth_1.authorize)('teacher'), (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.requestRevisionValidation), homework_controller_1.HomeworkController.requestRevision);
+router.get('/student/my-homework', auth_1.authenticate, (0, auth_1.authorize)('student'), homework_controller_1.HomeworkController.getHomeworkForStudent);
+router.post('/submit', auth_1.authenticate, (0, auth_1.authorize)('student'), (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.submitHomeworkValidation), homework_controller_1.HomeworkController.submitHomework);
+router.get('/stats', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'student'), homework_controller_1.HomeworkController.getHomeworkStats);
+router.get('/:id', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'student', 'admin', 'parent'), (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.homeworkIdParamValidation), homework_controller_1.HomeworkController.getHomeworkById);
+router.get('/class/:schoolId/:grade', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.getHomeworkByClassValidation), homework_controller_1.HomeworkController.getHomeworkForClass);
+router.get('/calendar/:schoolId', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'student', 'parent'), (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.getHomeworkCalendarValidation), homework_controller_1.HomeworkController.getHomeworkCalendar);
+router.get('/student/:studentId', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'parent'), (0, validateRequest_1.validateRequest)(homework_validation_1.HomeworkValidation.getHomeworkByStudentValidation), homework_controller_1.HomeworkController.getHomeworkByStudent);
+router.get('/school/:schoolId/upcoming', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), homework_controller_1.HomeworkController.getUpcomingHomework);
+router.get('/school/:schoolId/overdue', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), homework_controller_1.HomeworkController.getOverdueHomework);
+exports.homeworkRoutes = router;
+//# sourceMappingURL=homework.route.js.map

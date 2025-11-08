@@ -1,0 +1,31 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.examRoutes = void 0;
+const express_1 = __importDefault(require("express"));
+const exam_controller_1 = require("./exam.controller");
+const auth_1 = require("../../middlewares/auth");
+const validateRequest_1 = require("../../middlewares/validateRequest");
+const exam_validation_1 = require("./exam.validation");
+const router = express_1.default.Router();
+router.post('/create', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.createExamValidation), exam_controller_1.ExamController.createExam);
+router.patch('/:id', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.examIdParamValidation), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.updateExamValidation), exam_controller_1.ExamController.updateExam);
+router.delete('/:id', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.examIdParamValidation), exam_controller_1.ExamController.deleteExam);
+router.patch('/:id/publish', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.examIdParamValidation), exam_controller_1.ExamController.publishExam);
+router.patch('/:id/publish-results', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.examIdParamValidation), exam_controller_1.ExamController.publishExamResults);
+router.post('/submit-results', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.submitResultsValidation), exam_controller_1.ExamController.submitExamResults);
+router.get('/teacher/my-exams', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), exam_controller_1.ExamController.getExamsForTeacher);
+router.get('/student/my-exams', auth_1.authenticate, (0, auth_1.authorize)('student', 'parent', 'teacher', 'admin'), exam_controller_1.ExamController.getExamsForStudent);
+router.get('/:examId/results', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'student', 'parent', 'admin', 'superadmin'), exam_controller_1.ExamController.getExamResults);
+router.get('/:examId/statistics', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.getExamStatsValidation), exam_controller_1.ExamController.getExamStatistics);
+router.get('/dashboard/stats', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'student', 'admin', 'superadmin'), exam_controller_1.ExamController.getExamDashboardStats);
+router.get('/:id', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'student', 'admin', 'parent', 'superadmin'), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.examIdParamValidation), exam_controller_1.ExamController.getExamById);
+router.get('/class/:schoolId/:grade', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'student', 'parent', 'superadmin'), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.getExamsByClassValidation), exam_controller_1.ExamController.getExamsForClass);
+router.get('/schedule/:schoolId/:grade', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'student', 'parent', 'superadmin'), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.getExamScheduleValidation), exam_controller_1.ExamController.getExamSchedule);
+router.get('/calendar/:schoolId', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'student', 'parent', 'superadmin'), exam_controller_1.ExamController.getExamCalendar);
+router.get('/school/:schoolId/upcoming', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'superadmin'), exam_controller_1.ExamController.getUpcomingExams);
+router.get('/student/:studentId/results', auth_1.authenticate, (0, auth_1.authorize)('teacher', 'admin', 'parent', 'superadmin'), (0, validateRequest_1.validateRequest)(exam_validation_1.ExamValidation.studentIdParamValidation), exam_controller_1.ExamController.getStudentExamResults);
+exports.examRoutes = router;
+//# sourceMappingURL=exam.route.js.map

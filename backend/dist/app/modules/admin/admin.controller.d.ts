@@ -1,0 +1,22 @@
+import { Request, Response, NextFunction } from "express";
+export declare const getAdminDashboard: (req: Request, res: Response, next: NextFunction) => void;
+export declare const createSchedule: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getAllSchedules: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getScheduleById: (req: Request, res: Response, next: NextFunction) => void;
+export declare const updateSchedule: (req: Request, res: Response, next: NextFunction) => void;
+export declare const deleteSchedule: (req: Request, res: Response, next: NextFunction) => void;
+export declare const createCalendarEvent: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getAllCalendarEvents: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getCalendarEventById: (req: Request, res: Response, next: NextFunction) => void;
+export declare const updateCalendarEvent: (req: Request, res: Response, next: NextFunction) => void;
+export declare const deleteCalendarEvent: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getAllDisciplinaryActions: (req: Request, res: Response, next: NextFunction) => void;
+export declare const resolveDisciplinaryAction: (req: Request, res: Response, next: NextFunction) => void;
+export declare const addDisciplinaryActionComment: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getSchoolSettings: (req: Request, res: Response, next: NextFunction) => void;
+export declare const updateSchoolSettings: (req: Request, res: Response, next: NextFunction) => void;
+export declare const updateSectionCapacity: (req: Request, res: Response, next: NextFunction) => void;
+export declare const getSectionCapacityReport: (req: Request, res: Response, next: NextFunction) => void;
+export declare const listExportableSchools: (req: Request, res: Response, next: NextFunction) => void;
+export declare const exportStudentsForSchool: (req: Request, res: Response, next: NextFunction) => void;
+//# sourceMappingURL=admin.controller.d.ts.map
