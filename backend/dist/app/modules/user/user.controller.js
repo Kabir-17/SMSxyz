@@ -7,6 +7,7 @@ exports.getUsersByRole = exports.getUsersBySchool = exports.getCurrentUser = exp
 const http_status_1 = __importDefault(require("http-status"));
 const catchAsync_1 = require("../../utils/catchAsync");
 const user_service_1 = require("./user.service");
+const config_1 = __importDefault(require("../../config"));
 const createUser = (0, catchAsync_1.catchAsync)(async (req, res) => {
     const user = await user_service_1.userService.createUser(req.body);
     res.status(http_status_1.default.CREATED).json({
@@ -114,13 +115,14 @@ const resetPassword = (0, catchAsync_1.catchAsync)(async (req, res) => {
 exports.resetPassword = resetPassword;
 const login = (0, catchAsync_1.catchAsync)(async (req, res) => {
     const result = await user_service_1.userService.login(req.body);
-    const isCrossSite = true;
-    res.cookie("token", result.accessToken, {
+    const isCrossSiteEnv = config_1.default.node_env !== 'development';
+    const sameSite = (isCrossSiteEnv ? 'none' : 'lax');
+    res.cookie('token', result.accessToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: isCrossSite ? "none" : "lax",
+        secure: isCrossSiteEnv,
+        sameSite,
         expires: result.tokenExpires,
-        path: "/",
+        path: '/',
     });
     res.status(http_status_1.default.OK).json({
         success: true,
@@ -135,11 +137,19 @@ const login = (0, catchAsync_1.catchAsync)(async (req, res) => {
 });
 exports.login = login;
 const logout = (0, catchAsync_1.catchAsync)(async (req, res) => {
-    res.clearCookie('token', {
+    const isCrossSiteEnv = config_1.default.node_env !== 'development';
+    const sameSite = (isCrossSiteEnv ? 'none' : 'lax');
+    const cookieOptions = {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: isCrossSiteEnv,
+        sameSite,
         path: '/',
+    };
+    res.clearCookie('token', cookieOptions);
+    res.cookie('token', '', {
+        ...cookieOptions,
+        expires: new Date(0),
+        maxAge: 0,
     });
     res.status(http_status_1.default.OK).json({
         success: true,

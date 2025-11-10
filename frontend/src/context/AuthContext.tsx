@@ -1,6 +1,17 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { AuthContextType, User, LoginCredentials, PasswordChangeCredentials } from '../types/auth.types';
-import { authApi } from '@/services';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import {
+  AuthContextType,
+  User,
+  LoginCredentials,
+  PasswordChangeCredentials,
+} from "../types/auth.types";
+import { authApi } from "@/services";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -13,6 +24,30 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [requiresPasswordChange, setRequiresPasswordChange] = useState(false);
 
+  const clearClientTokenCookie = () => {
+    if (typeof document === "undefined") {
+      return;
+    }
+
+    const parts = [
+      "token=;",
+      "Path=/",
+      "Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+    ];
+
+    if (
+      typeof window !== "undefined" &&
+      window.location.protocol === "https:"
+    ) {
+      parts.push("Secure");
+      parts.push("SameSite=None");
+    } else {
+      parts.push("SameSite=Lax");
+    }
+
+    document.cookie = parts.join("; ");
+  };
+
   useEffect(() => {
     // Check if user is logged in on app start by calling verify endpoint
     checkExistingAuth();
@@ -23,9 +58,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Since we're using HTTP-only cookies, we can't access the token directly
       // Instead, we call the verify endpoint which will check the cookie
       const response = await authApi.verify();
-      
+
       if (response.data.success && response.data.data) {
-        const { user: userData, requiresPasswordChange: needsPasswordChange } = response.data.data;
+        const { user: userData, requiresPasswordChange: needsPasswordChange } =
+          response.data.data;
         setUser(userData);
         setRequiresPasswordChange(needsPasswordChange || false);
       } else {
@@ -33,20 +69,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
     } catch (error: any) {
       // Handle different types of errors
-      if (error.code === 'ERR_NETWORK') {
-        console.warn('Network error during auth check - server may be unavailable');
+      if (error.code === "ERR_NETWORK") {
+        console.warn(
+          "Network error during auth check - server may be unavailable"
+        );
       } else if (error.response?.status === 401) {
-        console.info('No existing auth session found');
-        
+        console.info("No existing auth session found");
       } else if (error.response?.status === 429) {
-        console.warn('Rate limited during auth check - will retry');
+        console.warn("Rate limited during auth check - will retry");
         // Don't clear auth data for rate limiting, just log
       } else {
-        console.error('Error checking existing auth:', error);
+        console.error("Error checking existing auth:", error);
       }
-      
+
       // Only clear auth data for non-network errors
-      if (error.code !== 'ERR_NETWORK' && error.response?.status !== 429) {
+      if (error.code !== "ERR_NETWORK" && error.response?.status !== 429) {
         clearAuthData();
       }
     } finally {
@@ -57,43 +94,54 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const clearAuthData = () => {
     setUser(null);
     setRequiresPasswordChange(false);
+    clearClientTokenCookie();
     // No need to clear localStorage/sessionStorage since we're using cookies
   };
 
-  const login = async (credentials: LoginCredentials): Promise<{success: boolean; requiresPasswordChange?: boolean}> => {
+  const login = async (
+    credentials: LoginCredentials
+  ): Promise<{ success: boolean; requiresPasswordChange?: boolean }> => {
     try {
       setIsLoading(true);
-      const response = await authApi.login(credentials.username, credentials.password);
+      const response = await authApi.login(
+        credentials.username,
+        credentials.password
+      );
 
       if (response.data.success && response.data.data) {
-        const { user: userData, requiresPasswordChange: needsPasswordChange } = response.data.data;
+        const { user: userData, requiresPasswordChange: needsPasswordChange } =
+          response.data.data;
 
         setUser(userData);
         setRequiresPasswordChange(needsPasswordChange || false);
 
-        return { 
-          success: true, 
-          requiresPasswordChange: needsPasswordChange 
+        return {
+          success: true,
+          requiresPasswordChange: needsPasswordChange,
         };
       }
 
       return { success: false };
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
       return { success: false };
     } finally {
       setIsLoading(false);
     }
   };
 
-  const changePassword = async (credentials: PasswordChangeCredentials): Promise<boolean> => {
+  const changePassword = async (
+    credentials: PasswordChangeCredentials
+  ): Promise<boolean> => {
     try {
-      const response = await authApi.forcePasswordChange(credentials.newPassword);
-      
+      const response = await authApi.forcePasswordChange(
+        credentials.newPassword
+      );
+
       if (response.data.success) {
         // Update the requiresPasswordChange flag
         setRequiresPasswordChange(false);
-        
+
         // Update user's isFirstLogin if present
         if (user) {
           setUser({
@@ -101,13 +149,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             isFirstLogin: false,
           });
         }
-        
+
         return true;
       }
-      
+
       return false;
     } catch (error) {
-      console.error('Password change failed:', error);
+      console.error("Password change failed:", error);
       return false;
     }
   };
@@ -117,7 +165,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Call logout endpoint to clear HTTP-only cookie
       await authApi.logout();
     } catch (error) {
-      console.error('Logout API call failed:', error);
+      console.error("Logout API call failed:", error);
     } finally {
       // Always clear local state regardless of API call success
       clearAuthData();
@@ -135,16 +183,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
 };
 
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
