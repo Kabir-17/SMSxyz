@@ -147,12 +147,13 @@ const login = catchAsync(async (req: Request, res: Response) => {
 });
 
 const logout = catchAsync(async (req: Request, res: Response) => {
-  // Clear authentication cookie
-  res.clearCookie('token', {
+  const isCrossSite = true;
+
+  res.clearCookie("token", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    path: '/',
+    secure: true,
+    sameSite: isCrossSite ? "none" : "lax",
+    path: "/",
   });
 
   res.status(httpStatus.OK).json({
