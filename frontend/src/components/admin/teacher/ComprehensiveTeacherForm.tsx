@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import { Save, ArrowLeft, Info, User, GraduationCap, MapPin, Phone, Briefcase, DollarSign } from "lucide-react";
+import {
+  Save,
+  ArrowLeft,
+  Info,
+  User,
+  GraduationCap,
+  MapPin,
+  Phone,
+  Briefcase,
+  Coins,
+} from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { adminApi } from "../../../services/admin.api";
 
@@ -15,12 +25,12 @@ interface TeacherFormData {
   bloodGroup: string;
   dob: string;
   joinDate?: string;
-  
+
   // Teaching Details (Required)
   subjects: string[];
   grades: number[];
   sections: string[];
-  
+
   // Experience (Required)
   experience: {
     totalYears: number;
@@ -32,16 +42,16 @@ interface TeacherFormData {
       toDate: string;
     }>;
   };
-  
+
   // Address (Required)
   address: {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country?: string;
   };
-  
+
   // Qualifications (Required)
   qualifications: Array<{
     degree: string;
@@ -49,7 +59,7 @@ interface TeacherFormData {
     year: number;
     specialization?: string;
   }>;
-  
+
   // Emergency Contact (Required)
   emergencyContact: {
     name: string;
@@ -57,21 +67,21 @@ interface TeacherFormData {
     phone: string;
     email?: string;
   };
-  
+
   // Salary (Optional)
   salary?: {
     basic: number;
     allowances?: number;
     deductions?: number;
   };
-  
+
   // Class Teacher Assignment (Optional)
   isClassTeacher: boolean;
   classTeacherFor?: {
     grade: number;
     section: string;
   };
-  
+
   // Photo
   photo?: File | null;
   photoPreview?: string;
@@ -90,25 +100,30 @@ interface ComprehensiveTeacherFormProps {
 }
 
 const DESIGNATIONS = [
-  'Principal',
-  'Vice Principal', 
-  'Head Teacher',
-  'Senior Teacher',
-  'Teacher',
-  'Assistant Teacher',
-  'Subject Coordinator',
-  'Sports Teacher',
-  'Music Teacher',
-  'Art Teacher',
-  'Librarian',
-  'Lab Assistant'
+  "Principal",
+  "Vice Principal",
+  "Head Teacher",
+  "Senior Teacher",
+  "Teacher",
+  "Assistant Teacher",
+  "Subject Coordinator",
+  "Sports Teacher",
+  "Music Teacher",
+  "Art Teacher",
+  "Librarian",
+  "Lab Assistant",
 ];
 
-const BLOOD_GROUPS = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
-const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onBack, onSave }) => {
+const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({
+  onBack,
+  onSave,
+}) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [availableSubjects, setAvailableSubjects] = useState<Array<{_id: string, name: string}>>([]);
+  const [availableSubjects, setAvailableSubjects] = useState<
+    Array<{ _id: string; name: string }>
+  >([]);
   const [formData, setFormData] = useState<TeacherFormData>({
     // Basic Information
     firstName: "",
@@ -120,18 +135,18 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
     bloodGroup: "O+",
     dob: "",
     joinDate: "",
-    
+
     // Teaching Details
     subjects: [],
     grades: [1],
     sections: ["A"],
-    
+
     // Experience
     experience: {
       totalYears: 0,
       previousSchools: [],
     },
-    
+
     // Address
     address: {
       street: "",
@@ -140,7 +155,7 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
       zipCode: "",
       country: "Bangladesh",
     },
-    
+
     // Qualifications (at least one required)
     qualifications: [
       {
@@ -150,7 +165,7 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
         specialization: "",
       },
     ],
-    
+
     // Emergency Contact
     emergencyContact: {
       name: "",
@@ -158,18 +173,18 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
       phone: "",
       email: "",
     },
-    
+
     // Salary (optional)
     salary: {
       basic: 0,
       allowances: 0,
       deductions: 0,
     },
-    
+
     // Class Teacher Assignment
     isClassTeacher: false,
     classTeacherFor: undefined,
-    
+
     // Photo
     photo: null,
     photoPreview: "",
@@ -188,8 +203,8 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
           setAvailableSubjects(response.data.data || []);
         }
       } catch (error) {
-        console.error('Failed to fetch subjects:', error);
-        toast.error('Failed to load subjects');
+        console.error("Failed to fetch subjects:", error);
+        toast.error("Failed to load subjects");
       }
     };
 
@@ -203,7 +218,7 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
     { id: 4, title: "Qualifications", icon: GraduationCap },
     { id: 5, title: "Address", icon: MapPin },
     { id: 6, title: "Emergency Contact", icon: Phone },
-    { id: 7, title: "Additional Info", icon: DollarSign },
+    { id: 7, title: "Additional Info", icon: Coins },
   ];
 
   const handleChange = (field: string, value: any) => {
@@ -226,30 +241,39 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
 
     switch (currentStep) {
       case 1: // Basic Information
-        if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
-        if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+        if (!formData.firstName.trim())
+          newErrors.firstName = "First name is required";
+        if (!formData.lastName.trim())
+          newErrors.lastName = "Last name is required";
         if (!formData.dob) newErrors.dob = "Date of birth is required";
-        if (!formData.designation) newErrors.designation = "Designation is required";
+        if (!formData.designation)
+          newErrors.designation = "Designation is required";
         if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
           newErrors.email = "Please enter a valid email address";
         }
         break;
 
       case 2: // Teaching Details
-        if (formData.subjects.length === 0 || formData.subjects.every(s => !s.trim())) {
+        if (
+          formData.subjects.length === 0 ||
+          formData.subjects.every((s) => !s.trim())
+        ) {
           newErrors.subjects = "At least one subject is required";
         }
         if (formData.grades.length === 0) {
           newErrors.grades = "At least one grade is required";
         }
-        if (formData.sections.length === 0 || formData.sections.every(s => !s.trim())) {
+        if (
+          formData.sections.length === 0 ||
+          formData.sections.every((s) => !s.trim())
+        ) {
           newErrors.sections = "At least one section is required";
         }
         break;
 
       case 3: // Experience
         if (formData.experience.totalYears < 0) {
-          newErrors['experience.totalYears'] = "Experience cannot be negative";
+          newErrors["experience.totalYears"] = "Experience cannot be negative";
         }
         break;
 
@@ -262,35 +286,43 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
             newErrors[`qualifications.${index}.degree`] = "Degree is required";
           }
           if (!qual.institution.trim()) {
-            newErrors[`qualifications.${index}.institution`] = "Institution is required";
+            newErrors[`qualifications.${index}.institution`] =
+              "Institution is required";
           }
           if (!qual.year || qual.year < 1980) {
-            newErrors[`qualifications.${index}.year`] = "Valid year is required";
+            newErrors[`qualifications.${index}.year`] =
+              "Valid year is required";
           }
         });
         break;
 
       case 5: // Address
-        if (!formData.address.city.trim()) newErrors['address.city'] = "City is required";
-        if (!formData.address.state.trim()) newErrors['address.state'] = "State is required";
-        if (!formData.address.zipCode.trim()) newErrors['address.zipCode'] = "Zip code is required";
+        if (!formData.address.city.trim())
+          newErrors["address.city"] = "City is required";
+        if (!formData.address.state.trim())
+          newErrors["address.state"] = "State is required";
+        // Zip code is optional; no validation required beyond optional trimming
         break;
 
       case 6: // Emergency Contact
         if (!formData.emergencyContact.name.trim()) {
-          newErrors['emergencyContact.name'] = "Emergency contact name is required";
+          newErrors["emergencyContact.name"] =
+            "Emergency contact name is required";
         }
         if (!formData.emergencyContact.relationship.trim()) {
-          newErrors['emergencyContact.relationship'] = "Emergency contact relationship is required";
+          newErrors["emergencyContact.relationship"] =
+            "Emergency contact relationship is required";
         }
         if (!formData.emergencyContact.phone.trim()) {
-          newErrors['emergencyContact.phone'] = "Emergency contact phone is required";
+          newErrors["emergencyContact.phone"] =
+            "Emergency contact phone is required";
         }
         break;
 
       case 7: // Additional Info
         if (formData.isClassTeacher && !formData.classTeacherFor) {
-          newErrors.classTeacherFor = "Class assignment is required for class teachers";
+          newErrors.classTeacherFor =
+            "Class assignment is required for class teachers";
         }
         break;
     }
@@ -335,24 +367,41 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
       if (formData.email) submitData.append("email", formData.email);
       if (formData.phone) submitData.append("phone", formData.phone);
       if (formData.joinDate) submitData.append("joinDate", formData.joinDate);
-      if (formData.employeeId) submitData.append("employeeId", formData.employeeId);
+      if (formData.employeeId)
+        submitData.append("employeeId", formData.employeeId);
 
       // Add teaching details
-      submitData.append("subjects", JSON.stringify(formData.subjects.filter(s => s.trim())));
+      submitData.append(
+        "subjects",
+        JSON.stringify(formData.subjects.filter((s) => s.trim()))
+      );
       submitData.append("grades", JSON.stringify(formData.grades));
-      submitData.append("sections", JSON.stringify(formData.sections.filter(s => s.trim())));
+      submitData.append(
+        "sections",
+        JSON.stringify(formData.sections.filter((s) => s.trim()))
+      );
 
       // Add experience
       submitData.append("experience", JSON.stringify(formData.experience));
 
       // Add address
-      submitData.append("address", JSON.stringify(formData.address));
+      const cleanedAddress = {
+        ...formData.address,
+        zipCode: formData.address.zipCode?.trim() || undefined,
+      };
+      submitData.append("address", JSON.stringify(cleanedAddress));
 
       // Add qualifications
-      submitData.append("qualifications", JSON.stringify(formData.qualifications));
+      submitData.append(
+        "qualifications",
+        JSON.stringify(formData.qualifications)
+      );
 
       // Add emergency contact
-      submitData.append("emergencyContact", JSON.stringify(formData.emergencyContact));
+      submitData.append(
+        "emergencyContact",
+        JSON.stringify(formData.emergencyContact)
+      );
 
       // Add salary if provided
       if (formData.salary && formData.salary.basic > 0) {
@@ -360,9 +409,15 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
       }
 
       // Add class teacher info
-      submitData.append("isClassTeacher", JSON.stringify(formData.isClassTeacher));
+      submitData.append(
+        "isClassTeacher",
+        JSON.stringify(formData.isClassTeacher)
+      );
       if (formData.classTeacherFor) {
-        submitData.append("classTeacherFor", JSON.stringify(formData.classTeacherFor));
+        submitData.append(
+          "classTeacherFor",
+          JSON.stringify(formData.classTeacherFor)
+        );
       }
 
       // Add photo if exists
@@ -382,7 +437,7 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
       if (result.success) {
         setCredentials(result.data.credentials);
         toast.success("Teacher created successfully!");
-        
+
         if (onSave) {
           onSave(result.data);
         }
@@ -425,10 +480,13 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
         <div className="flex items-start">
           <Info className="h-5 w-5 text-blue-400 mt-0.5 mr-3" />
           <div>
-            <h3 className="text-sm font-medium text-blue-800">Basic Information Instructions</h3>
+            <h3 className="text-sm font-medium text-blue-800">
+              Basic Information Instructions
+            </h3>
             <p className="text-sm text-blue-600 mt-1">
-              Fill in the teacher's basic personal information. Fields marked with * are required.
-              Age must be between 21-65 years for teaching positions.
+              Fill in the teacher's basic personal information. Fields marked
+              with * are required. Age must be between 21-65 years for teaching
+              positions.
             </p>
           </div>
         </div>
@@ -472,12 +530,21 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
             Date of Birth *
           </label>
           <input
+            aria-label="dob"
             type="date"
             value={formData.dob}
             onChange={(e) => handleChange("dob", e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            max={new Date(new Date().setFullYear(new Date().getFullYear() - 21)).toISOString().split('T')[0]}
-            min={new Date(new Date().setFullYear(new Date().getFullYear() - 65)).toISOString().split('T')[0]}
+            max={
+              new Date(new Date().setFullYear(new Date().getFullYear() - 21))
+                .toISOString()
+                .split("T")[0]
+            }
+            min={
+              new Date(new Date().setFullYear(new Date().getFullYear() - 65))
+                .toISOString()
+                .split("T")[0]
+            }
           />
           {errors.dob && (
             <p className="text-red-500 text-sm mt-1">{errors.dob}</p>
@@ -489,6 +556,7 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
             Designation *
           </label>
           <select
+            aria-label="designation"
             value={formData.designation}
             onChange={(e) => handleChange("designation", e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -509,6 +577,7 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
             Blood Group *
           </label>
           <select
+            aria-label="blood group"
             value={formData.bloodGroup}
             onChange={(e) => handleChange("bloodGroup", e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -526,11 +595,12 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
             Join Date
           </label>
           <input
+            aria-label="join date"
             type="date"
             value={formData.joinDate || ""}
             onChange={(e) => handleChange("joinDate", e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            max={new Date().toISOString().split('T')[0]}
+            max={new Date().toISOString().split("T")[0]}
           />
         </div>
 
@@ -573,10 +643,13 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
         <div className="flex items-start">
           <Info className="h-5 w-5 text-green-400 mt-0.5 mr-3" />
           <div>
-            <h3 className="text-sm font-medium text-green-800">Teaching Details Instructions</h3>
+            <h3 className="text-sm font-medium text-green-800">
+              Teaching Details Instructions
+            </h3>
             <p className="text-sm text-green-600 mt-1">
-              Specify what subjects the teacher will teach, which grades they'll handle, 
-              and which sections they'll be assigned to. At least one item is required for each field.
+              Specify what subjects the teacher will teach, which grades they'll
+              handle, and which sections they'll be assigned to. At least one
+              item is required for each field.
             </p>
           </div>
         </div>
@@ -589,18 +662,29 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
           </label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {availableSubjects.length === 0 ? (
-              <p className="text-sm text-gray-500 col-span-full">Loading subjects...</p>
+              <p className="text-sm text-gray-500 col-span-full">
+                Loading subjects...
+              </p>
             ) : (
               availableSubjects.map((subject) => (
-                <label key={subject._id} className="flex items-center p-2 bg-white rounded border hover:bg-gray-50">
+                <label
+                  key={subject._id}
+                  className="flex items-center p-2 bg-white rounded border hover:bg-gray-50"
+                >
                   <input
                     type="checkbox"
                     checked={formData.subjects.includes(subject._id)}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        handleChange("subjects", [...formData.subjects, subject._id]);
+                        handleChange("subjects", [
+                          ...formData.subjects,
+                          subject._id,
+                        ]);
                       } else {
-                        handleChange("subjects", formData.subjects.filter(s => s !== subject._id));
+                        handleChange(
+                          "subjects",
+                          formData.subjects.filter((s) => s !== subject._id)
+                        );
                       }
                     }}
                     className="mr-2 flex-shrink-0"
@@ -629,7 +713,10 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
                     if (e.target.checked) {
                       handleChange("grades", [...formData.grades, grade]);
                     } else {
-                      handleChange("grades", formData.grades.filter(g => g !== grade));
+                      handleChange(
+                        "grades",
+                        formData.grades.filter((g) => g !== grade)
+                      );
                     }
                   }}
                   className="mr-2"
@@ -648,7 +735,7 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
             Sections * (Select multiple)
           </label>
           <div className="grid grid-cols-6 gap-2">
-            {['A', 'B', 'C', 'D', 'E', 'F'].map((section) => (
+            {["A", "B", "C", "D", "E", "F"].map((section) => (
               <label key={section} className="flex items-center">
                 <input
                   type="checkbox"
@@ -657,7 +744,10 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
                     if (e.target.checked) {
                       handleChange("sections", [...formData.sections, section]);
                     } else {
-                      handleChange("sections", formData.sections.filter(s => s !== section));
+                      handleChange(
+                        "sections",
+                        formData.sections.filter((s) => s !== section)
+                      );
                     }
                   }}
                   className="mr-2"
@@ -679,17 +769,31 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
       {credentials ? (
         // Show credentials after successful creation
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-green-600 mb-6">Teacher Created Successfully!</h2>
+          <h2 className="text-2xl font-bold text-green-600 mb-6">
+            Teacher Created Successfully!
+          </h2>
           <div className="bg-green-50 border border-green-200 rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-4">Login Credentials</h3>
             <div className="space-y-3">
-              <p><strong>Teacher ID:</strong> {credentials.teacherId}</p>
-              <p><strong>Employee ID:</strong> {credentials.employeeId}</p>
-              <p><strong>Username:</strong> {credentials.username}</p>
-              <p><strong>Password:</strong> <span className="font-mono bg-gray-100 px-2 py-1 rounded">{credentials.password}</span></p>
+              <p>
+                <strong>Teacher ID:</strong> {credentials.teacherId}
+              </p>
+              <p>
+                <strong>Employee ID:</strong> {credentials.employeeId}
+              </p>
+              <p>
+                <strong>Username:</strong> {credentials.username}
+              </p>
+              <p>
+                <strong>Password:</strong>{" "}
+                <span className="font-mono bg-gray-100 px-2 py-1 rounded">
+                  {credentials.password}
+                </span>
+              </p>
             </div>
             <p className="text-sm text-gray-600 mt-4">
-              Please save these credentials securely. The teacher will be required to change their password on first login.
+              Please save these credentials securely. The teacher will be
+              required to change their password on first login.
             </p>
             <Button onClick={onBack} className="mt-6">
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -702,8 +806,13 @@ const ComprehensiveTeacherForm: React.FC<ComprehensiveTeacherFormProps> = ({ onB
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Add New Teacher</h1>
-              <p className="text-gray-600">Fill out all required information to create a new teacher account</p>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Add New Teacher
+              </h1>
+              <p className="text-gray-600">
+                Fill out all required information to create a new teacher
+                account
+              </p>
             </div>
             {onBack && (
               <Button variant="outline" onClick={onBack}>

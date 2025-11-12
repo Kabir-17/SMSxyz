@@ -151,9 +151,12 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
     student.studentId.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const formatCurrency = (amount: number | undefined) => {
-    if (amount === undefined || amount === null || isNaN(amount)) return "0";
-    return new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(amount);
+  const formatCurrency = (amount?: number | null) => {
+    const value = typeof amount === "number" && Number.isFinite(amount) ? amount : 0;
+    const formatted = new Intl.NumberFormat("en-IN", {
+      maximumFractionDigits: 0,
+    }).format(value);
+    return `GNF ${formatted}`;
   };
 
   return (
@@ -171,7 +174,7 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-500">Total Collections</p>
-                <p className="text-2xl font-bold text-gray-900">₹{dashboardData?.totalCollections || 0}</p>
+                <p className="text-2xl font-bold text-gray-900">{formatCurrency(dashboardData?.totalCollections)}</p>
               </div>
             </div>
           </div>
@@ -185,7 +188,7 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-500">Monthly Target</p>
-                <p className="text-2xl font-bold text-gray-900">₹{dashboardData?.monthlyTarget || 0}</p>
+                <p className="text-2xl font-bold text-gray-900">{formatCurrency(dashboardData?.monthlyTarget)}</p>
               </div>
             </div>
           </div>
@@ -199,7 +202,7 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
               </div>
               <div className="ml-4">
                 <p className="text-sm text-gray-500">Pending Dues</p>
-                <p className="text-2xl font-bold text-gray-900">₹{dashboardData?.pendingDues || 0}</p>
+                <p className="text-2xl font-bold text-gray-900">{formatCurrency(dashboardData?.pendingDues)}</p>
               </div>
             </div>
           </div>
@@ -267,7 +270,7 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
                     tooltip: {
                       callbacks: {
                         label: function(context) {
-                          return context.dataset.label + ': ₹' + formatCurrency(context.parsed.y);
+                          return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
                         }
                       }
                     }
@@ -277,7 +280,7 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
                       beginAtZero: true,
                       ticks: {
                         callback: function(value) {
-                          return '₹' + formatCurrency(Number(value));
+                          return formatCurrency(Number(value));
                         }
                       }
                     }
@@ -327,7 +330,7 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
                         label: function(context) {
                           const label = context.label || '';
                           const value = context.parsed;
-                          return label + ': ₹' + formatCurrency(value);
+                          return label + ': ' + formatCurrency(value);
                         }
                       }
                     }
@@ -349,7 +352,7 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
                     <p className="text-sm font-medium text-gray-900">{transaction.studentName}</p>
                     <p className="text-xs text-gray-500">{transaction.studentId} • {new Date(transaction.date).toLocaleDateString()}</p>
                   </div>
-                  <span className="text-sm font-bold text-green-600">₹{formatCurrency(transaction.amount)}</span>
+                  <span className="text-sm font-bold text-green-600">{formatCurrency(transaction.amount)}</span>
                 </div>
               )) || (
                 <p className="text-gray-500">No recent transactions.</p>
@@ -398,7 +401,7 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
                     tooltip: {
                       callbacks: {
                         label: function(context) {
-                          return 'Amount: ₹' + formatCurrency(context.parsed.y);
+                          return 'Amount: ' + formatCurrency(context.parsed.y);
                         }
                       }
                     }
@@ -408,7 +411,7 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
                       beginAtZero: true,
                       ticks: {
                         callback: function(value) {
-                          return '₹' + formatCurrency(Number(value));
+                          return formatCurrency(Number(value));
                         }
                       }
                     }
@@ -506,7 +509,7 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Grade</label>
-                  <select
+                  <select aria-label='grade'
                     value={selectedGrade}
                     onChange={(e) => setSelectedGrade(e.target.value ? Number(e.target.value) : '')}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
@@ -520,7 +523,7 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Section</label>
-                  <select
+                  <select aria-label='section'
                     value={selectedSection}
                     onChange={(e) => setSelectedSection(e.target.value)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
@@ -570,8 +573,8 @@ const AccountantHome: React.FC<{ dashboardData: any }> = ({ dashboardData }) => 
                             </div>
                             {student.feeStatus && (
                               <div className="flex items-center gap-4 mt-2 text-xs">
-                                <span className="text-green-600">Paid: ₹{formatCurrency(student.feeStatus.totalPaidAmount)}</span>
-                                <span className="text-orange-600">Due: ₹{formatCurrency(student.feeStatus.totalDueAmount)}</span>
+                                <span className="text-green-600">Paid: {formatCurrency(student.feeStatus.totalPaidAmount)}</span>
+                                <span className="text-orange-600">Due: {formatCurrency(student.feeStatus.totalDueAmount)}</span>
                                 <span className="text-red-600">Pending: {student.feeStatus.pendingMonths} months</span>
                               </div>
                             )}

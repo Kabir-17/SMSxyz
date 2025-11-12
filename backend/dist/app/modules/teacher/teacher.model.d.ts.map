@@ -1,1 +1,1 @@
-{"version":3,"file":"teacher.model.d.ts","sourceRoot":"","sources":["../../../../src/app/modules/teacher/teacher.model.ts"],"names":[],"mappings":"AAEA,OAAO,EAIL,aAAa,EAEb,qBAAqB,EACtB,MAAM,qBAAqB,CAAC;AA0iB7B,eAAO,MAAM,OAAO,eAAmE,CAAC;AACxF,eAAO,MAAM,YAAY;;;;OAAmE,CAAC"}
+{"version":3,"file":"teacher.model.d.ts","sourceRoot":"","sources":["../../../../src/app/modules/teacher/teacher.model.ts"],"names":[],"mappings":"AAEA,OAAO,EAIL,aAAa,EAEb,qBAAqB,EACtB,MAAM,qBAAqB,CAAC;AAwiB7B,eAAO,MAAM,OAAO,eAAmE,CAAC;AACxF,eAAO,MAAM,YAAY;;;;OAAmE,CAAC"}

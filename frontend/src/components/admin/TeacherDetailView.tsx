@@ -13,7 +13,7 @@ import {
   BookOpen,
   Heart,
   Shield,
-  DollarSign,
+  Coins,
   Clock,
   Building,
   UserCheck,
@@ -56,7 +56,7 @@ interface Teacher {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country: string;
   };
   emergencyContact: {
@@ -128,7 +128,9 @@ const TeacherDetailView: React.FC<TeacherDetailViewProps> = ({
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "GNF",
+      currencyDisplay: "symbol",
+      minimumFractionDigits: 0,
     }).format(amount);
   };
 
@@ -323,11 +325,15 @@ const TeacherDetailView: React.FC<TeacherDetailViewProps> = ({
                   </label>
                   <p className="text-gray-900">
                     {teacher.address
-                      ? `${teacher.address.street || ""} ${
-                          teacher.address.city
-                        }, ${teacher.address.state} ${
-                          teacher.address.zipCode
-                        }, ${teacher.address.country}`.trim()
+                      ? [
+                          teacher.address.street,
+                          teacher.address.city,
+                          teacher.address.state,
+                          teacher.address.zipCode,
+                          teacher.address.country,
+                        ]
+                          .filter((part) => part && String(part).trim())
+                          .join(", ")
                       : "N/A"}
                   </p>
                 </div>
@@ -559,7 +565,7 @@ const TeacherDetailView: React.FC<TeacherDetailViewProps> = ({
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <DollarSign className="w-5 h-5 mr-2 text-green-600" />
+                    <Coins className="w-5 h-5 mr-2 text-green-600" />
                     Salary Information
                   </CardTitle>
                 </CardHeader>

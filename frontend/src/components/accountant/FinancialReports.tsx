@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { apiService } from '@/services';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Download, Calendar, TrendingUp, DollarSign } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { apiService } from "@/services";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Download, Calendar, TrendingUp, Coins } from "lucide-react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,8 +21,8 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
-import { Line, Bar, Pie } from 'react-chartjs-2';
+} from "chart.js";
+import { Line, Bar, Pie } from "react-chartjs-2";
 
 // Register Chart.js components
 ChartJS.register(
@@ -68,9 +74,9 @@ interface ReportData {
 const FinancialReports: React.FC = () => {
   const [reportData, setReportData] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(false);
-  const [reportType, setReportType] = useState<string>('monthly');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [reportType, setReportType] = useState<string>("monthly");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
     loadReport();
@@ -89,7 +95,7 @@ const FinancialReports: React.FC = () => {
         setReportData(response.data);
       }
     } catch (error) {
-      console.error('Failed to load report:', error);
+      console.error("Failed to load report:", error);
     } finally {
       setLoading(false);
     }
@@ -99,31 +105,58 @@ const FinancialReports: React.FC = () => {
     if (!reportData) return;
 
     const csvContent = [
-      ['Financial Report'],
-      ['Report Type:', reportData.reportType],
-      ['Period:', `${new Date(reportData.period.start).toLocaleDateString()} - ${new Date(reportData.period.end).toLocaleDateString()}`],
-      [''],
-      ['Summary'],
-      ['Total Amount:', reportData.summary.totalAmount],
-      ['Total Transactions:', reportData.summary.totalTransactions],
-      ['Average Transaction:', reportData.summary.averageTransaction],
-      [''],
-      ['By Payment Method'],
-      ['Payment Method', 'Amount', 'Count'],
-      ...reportData.byPaymentMethod.map(pm => [pm._id, pm.totalAmount, pm.count]),
-    ].map(row => row.join(',')).join('\n');
+      ["Financial Report"],
+      ["Report Type:", reportData.reportType],
+      [
+        "Period:",
+        `${new Date(reportData.period.start).toLocaleDateString()} - ${new Date(
+          reportData.period.end
+        ).toLocaleDateString()}`,
+      ],
+      [""],
+      ["Summary"],
+      ["Total Amount:", reportData.summary.totalAmount],
+      ["Total Transactions:", reportData.summary.totalTransactions],
+      ["Average Transaction:", reportData.summary.averageTransaction],
+      [""],
+      ["By Payment Method"],
+      ["Payment Method", "Amount", "Count"],
+      ...reportData.byPaymentMethod.map((pm) => [
+        pm._id,
+        pm.totalAmount,
+        pm.count,
+      ]),
+    ]
+      .map((row) => row.join(","))
+      .join("\n");
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob([csvContent], { type: "text/csv" });
     const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `financial_report_${reportType}_${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `financial_report_${reportType}_${
+      new Date().toISOString().split("T")[0]
+    }.csv`;
     a.click();
+  };
+
+  const formatCurrency = (amount?: number | null) => {
+    const value =
+      typeof amount === "number" && Number.isFinite(amount) ? amount : 0;
+    const formatted = new Intl.NumberFormat("en-IN", {
+      maximumFractionDigits: 0,
+    }).format(value);
+    return `GNF ${formatted}`;
   };
 
   // Chart Data Preparation
   const getDailyChartData = () => {
-    if (!reportData || !reportData.dailyBreakdown || reportData.dailyBreakdown.length === 0) return null;
+    if (
+      !reportData ||
+      !reportData.dailyBreakdown ||
+      reportData.dailyBreakdown.length === 0
+    )
+      return null;
 
     const labels = reportData.dailyBreakdown.map(
       (d) => `${d._id.day}/${d._id.month}`
@@ -134,10 +167,10 @@ const FinancialReports: React.FC = () => {
       labels,
       datasets: [
         {
-          label: 'Daily Collections',
+          label: "Daily Collections",
           data,
-          borderColor: 'rgb(249, 115, 22)',
-          backgroundColor: 'rgba(249, 115, 22, 0.1)',
+          borderColor: "rgb(249, 115, 22)",
+          backgroundColor: "rgba(249, 115, 22, 0.1)",
           fill: true,
           tension: 0.4,
         },
@@ -146,7 +179,12 @@ const FinancialReports: React.FC = () => {
   };
 
   const getPaymentMethodChartData = () => {
-    if (!reportData || !reportData.byPaymentMethod || reportData.byPaymentMethod.length === 0) return null;
+    if (
+      !reportData ||
+      !reportData.byPaymentMethod ||
+      reportData.byPaymentMethod.length === 0
+    )
+      return null;
 
     const labels = reportData.byPaymentMethod.map((pm) => pm._id.toUpperCase());
     const data = reportData.byPaymentMethod.map((pm) => pm.totalAmount);
@@ -155,14 +193,14 @@ const FinancialReports: React.FC = () => {
       labels,
       datasets: [
         {
-          label: 'Amount by Payment Method',
+          label: "Amount by Payment Method",
           data,
           backgroundColor: [
-            'rgba(34, 197, 94, 0.8)',
-            'rgba(59, 130, 246, 0.8)',
-            'rgba(168, 85, 247, 0.8)',
-            'rgba(249, 115, 22, 0.8)',
-            'rgba(234, 179, 8, 0.8)',
+            "rgba(34, 197, 94, 0.8)",
+            "rgba(59, 130, 246, 0.8)",
+            "rgba(168, 85, 247, 0.8)",
+            "rgba(249, 115, 22, 0.8)",
+            "rgba(234, 179, 8, 0.8)",
           ],
           borderWidth: 2,
         },
@@ -171,7 +209,8 @@ const FinancialReports: React.FC = () => {
   };
 
   const getGradeChartData = () => {
-    if (!reportData || !reportData.byGrade || reportData.byGrade.length === 0) return null;
+    if (!reportData || !reportData.byGrade || reportData.byGrade.length === 0)
+      return null;
 
     const labels = reportData.byGrade.map((g) => `Grade ${g._id}`);
     const data = reportData.byGrade.map((g) => g.totalAmount);
@@ -180,10 +219,10 @@ const FinancialReports: React.FC = () => {
       labels,
       datasets: [
         {
-          label: 'Collections by Grade',
+          label: "Collections by Grade",
           data,
-          backgroundColor: 'rgba(249, 115, 22, 0.8)',
-          borderColor: 'rgb(249, 115, 22)',
+          backgroundColor: "rgba(249, 115, 22, 0.8)",
+          borderColor: "rgb(249, 115, 22)",
           borderWidth: 1,
         },
       ],
@@ -195,7 +234,7 @@ const FinancialReports: React.FC = () => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'top' as const,
+        position: "top" as const,
       },
     },
   };
@@ -217,13 +256,18 @@ const FinancialReports: React.FC = () => {
             <TrendingUp className="h-6 w-6" />
             Financial Reports
           </CardTitle>
-          <CardDescription>View comprehensive financial analytics and reports</CardDescription>
+          <CardDescription>
+            View comprehensive financial analytics and reports
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Report Type</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Report Type
+              </label>
               <select
+                aria-label="type"
                 value={reportType}
                 onChange={(e) => setReportType(e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
@@ -235,7 +279,9 @@ const FinancialReports: React.FC = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Start Date
+              </label>
               <Input
                 type="date"
                 value={startDate}
@@ -243,7 +289,9 @@ const FinancialReports: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">End Date</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                End Date
+              </label>
               <Input
                 type="date"
                 value={endDate}
@@ -251,7 +299,10 @@ const FinancialReports: React.FC = () => {
               />
             </div>
             <div className="flex items-end gap-2">
-              <Button onClick={loadReport} className="flex-1 bg-orange-600 hover:bg-orange-700">
+              <Button
+                onClick={loadReport}
+                className="flex-1 bg-orange-600 hover:bg-orange-700"
+              >
                 <Calendar className="h-4 w-4 mr-2" />
                 Generate
               </Button>
@@ -271,12 +322,14 @@ const FinancialReports: React.FC = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm text-green-600 font-medium">Total Collections</div>
+                    <div className="text-sm text-green-600 font-medium">
+                      Total Collections
+                    </div>
                     <div className="text-3xl font-bold text-green-700 mt-2">
-                      ₹{reportData.summary.totalAmount.toLocaleString()}
+                      {formatCurrency(reportData.summary.totalAmount)}
                     </div>
                   </div>
-                  <DollarSign className="h-12 w-12 text-green-600 opacity-50" />
+                  <Coins className="h-12 w-12 text-green-600 opacity-50" />
                 </div>
               </CardContent>
             </Card>
@@ -285,7 +338,9 @@ const FinancialReports: React.FC = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm text-blue-600 font-medium">Total Transactions</div>
+                    <div className="text-sm text-blue-600 font-medium">
+                      Total Transactions
+                    </div>
                     <div className="text-3xl font-bold text-blue-700 mt-2">
                       {reportData.summary.totalTransactions}
                     </div>
@@ -299,9 +354,11 @@ const FinancialReports: React.FC = () => {
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm text-purple-600 font-medium">Average Transaction</div>
+                    <div className="text-sm text-purple-600 font-medium">
+                      Average Transaction
+                    </div>
                     <div className="text-3xl font-bold text-purple-700 mt-2">
-                      ₹{Math.round(reportData.summary.averageTransaction).toLocaleString()}
+                      {formatCurrency(reportData.summary.averageTransaction)}
                     </div>
                   </div>
                   <Calendar className="h-12 w-12 text-purple-600 opacity-50" />
@@ -316,7 +373,9 @@ const FinancialReports: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Collection Trend</CardTitle>
-                <CardDescription>Daily collection amounts over the period</CardDescription>
+                <CardDescription>
+                  Daily collection amounts over the period
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-[300px]">
@@ -335,12 +394,17 @@ const FinancialReports: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Payment Methods</CardTitle>
-                <CardDescription>Distribution by payment method</CardDescription>
+                <CardDescription>
+                  Distribution by payment method
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-[300px]">
                   {getPaymentMethodChartData() ? (
-                    <Pie data={getPaymentMethodChartData()!} options={chartOptions} />
+                    <Pie
+                      data={getPaymentMethodChartData()!}
+                      options={chartOptions}
+                    />
                   ) : (
                     <div className="flex items-center justify-center h-full text-gray-500">
                       No payment method data available
@@ -354,7 +418,9 @@ const FinancialReports: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Collections by Grade</CardTitle>
-                <CardDescription>Fee collection breakdown by grade</CardDescription>
+                <CardDescription>
+                  Fee collection breakdown by grade
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="h-[300px]">
@@ -373,24 +439,33 @@ const FinancialReports: React.FC = () => {
             <Card>
               <CardHeader>
                 <CardTitle>Top Collectors</CardTitle>
-                <CardDescription>Accountants with highest collections</CardDescription>
+                <CardDescription>
+                  Accountants with highest collections
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   {reportData.topAccountants.map((accountant, index) => (
-                    <div key={accountant._id} className="flex items-center justify-between border-b pb-3">
+                    <div
+                      key={accountant._id}
+                      className="flex items-center justify-between border-b pb-3"
+                    >
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center h-10 w-10 rounded-full bg-orange-100 text-orange-600 font-bold">
                           {index + 1}
                         </div>
                         <div>
-                          <div className="font-semibold">{accountant.accountantName}</div>
-                          <div className="text-sm text-gray-500">{accountant.count} transactions</div>
+                          <div className="font-semibold">
+                            {accountant.accountantName}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {accountant.count} transactions
+                          </div>
                         </div>
                       </div>
                       <div className="text-right">
                         <div className="text-lg font-bold text-green-600">
-                          ₹{accountant.totalAmount.toLocaleString()}
+                          {formatCurrency(accountant.totalAmount)}
                         </div>
                       </div>
                     </div>
@@ -409,7 +484,9 @@ const FinancialReports: React.FC = () => {
           <Card>
             <CardHeader>
               <CardTitle>Payment Method Details</CardTitle>
-              <CardDescription>Detailed breakdown of collections by payment method</CardDescription>
+              <CardDescription>
+                Detailed breakdown of collections by payment method
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -435,7 +512,10 @@ const FinancialReports: React.FC = () => {
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {reportData.byPaymentMethod.map((pm) => {
-                      const percentage = ((pm.totalAmount / reportData.summary.totalAmount) * 100).toFixed(1);
+                      const percentage = (
+                        (pm.totalAmount / reportData.summary.totalAmount) *
+                        100
+                      ).toFixed(1);
                       return (
                         <tr key={pm._id}>
                           <td className="px-6 py-4 whitespace-nowrap">
@@ -444,13 +524,15 @@ const FinancialReports: React.FC = () => {
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
-                            ₹{pm.totalAmount.toLocaleString()}
+                            {formatCurrency(pm.totalAmount)}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {pm.count}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            ₹{Math.round(pm.totalAmount / pm.count).toLocaleString()}
+                            {formatCurrency(
+                              pm.count > 0 ? pm.totalAmount / pm.count : 0
+                            )}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center gap-2">
@@ -460,7 +542,9 @@ const FinancialReports: React.FC = () => {
                                   style={{ width: `${percentage}%` }}
                                 ></div>
                               </div>
-                              <span className="text-sm font-medium text-gray-700">{percentage}%</span>
+                              <span className="text-sm font-medium text-gray-700">
+                                {percentage}%
+                              </span>
                             </div>
                           </td>
                         </tr>

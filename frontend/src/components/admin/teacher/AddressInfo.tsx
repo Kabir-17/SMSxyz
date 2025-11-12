@@ -9,7 +9,7 @@ interface AddressInfoProps {
       street: string;
       city: string;
       state: string;
-      zipCode: string;
+      zipCode?: string;
       country: string;
     };
   };
@@ -88,7 +88,7 @@ const AddressInfo: React.FC<AddressInfoProps> = ({
             ZIP Code
           </label>
           <Input
-            value={formData.address.zipCode}
+            value={formData.address.zipCode || ""}
             onChange={(e) => handleAddressChange("zipCode", e.target.value)}
             placeholder="Enter ZIP code"
           />

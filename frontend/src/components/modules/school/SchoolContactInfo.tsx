@@ -19,12 +19,21 @@ const SchoolContactInfo: React.FC<SchoolContactInfoProps> = ({ school }) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
-            <p className="text-gray-900">{school.address.street}</p>
+            {school.address.street && (
+              <p className="text-gray-900">{school.address.street}</p>
+            )}
             <p className="text-gray-900">
-              {school.address.city}, {school.address.state}{" "}
-              {school.address.postalCode}
+              {[
+                school.address.city,
+                school.address.state,
+                school.address.postalCode,
+              ]
+                .filter((part) => part && String(part).trim())
+                .join(", ")}
             </p>
-            <p className="text-gray-900">{school.address.country}</p>
+            {school.address.country && (
+              <p className="text-gray-900">{school.address.country}</p>
+            )}
           </div>
         </CardContent>
       </Card>

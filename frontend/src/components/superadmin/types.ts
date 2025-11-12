@@ -9,6 +9,11 @@ export interface SuperadminStats {
   pendingSchools?: number;
   suspendedSchools?: number;
   activeUsers?: number;
+  recentActivity?: {
+    schoolsCreated?: number;
+    studentsEnrolled?: number;
+    teachersAdded?: number;
+  };
 }
 
 export interface SuperadminUser {
@@ -28,7 +33,7 @@ export interface SchoolSummary {
         city: string;
         state: string;
         country: string;
-        postalCode: string;
+        postalCode?: string;
       };
   createdAt?: string;
   updatedAt?: string;

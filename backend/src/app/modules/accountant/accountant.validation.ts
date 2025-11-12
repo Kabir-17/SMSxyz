@@ -1,5 +1,17 @@
 import { z } from 'zod';
 
+const optionalTrimmedString = (schema: z.ZodString) =>
+  z.preprocess(
+    (val) => {
+      if (typeof val !== 'string') {
+        return val;
+      }
+      const trimmed = val.trim();
+      return trimmed === '' ? undefined : trimmed;
+    },
+    schema.optional()
+  );
+
 const createAccountantValidationSchema = z.object({
   body: z.object({
     schoolId: z
@@ -158,10 +170,9 @@ const createAccountantValidationSchema = z.object({
         .min(1, 'State is required')
         .max(100, 'State cannot exceed 100 characters')
         .trim(),
-      zipCode: z
-        .string()
-        .regex(/^\d{5,6}$/, 'Invalid zip code format')
-        .trim(),
+      zipCode: optionalTrimmedString(
+        z.string()
+      ),
       country: z
         .string()
         .min(1, 'Country is required')
@@ -323,7 +334,9 @@ const updateAccountantValidationSchema = z.object({
       street: z.string().max(200).trim().optional(),
       city: z.string().min(1).max(100).trim(),
       state: z.string().min(1).max(100).trim(),
-      zipCode: z.string().regex(/^\d{5,6}$/).trim(),
+      zipCode: optionalTrimmedString(
+        z.string()
+      ),
       country: z.string().min(1).max(100).trim(),
     }).optional(),
     emergencyContact: z.object({

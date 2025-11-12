@@ -32,7 +32,7 @@ export interface ITeacher {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country: string;
   };
   emergencyContact: {
@@ -131,7 +131,7 @@ export interface ICreateTeacherRequest {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country: string;
   };
   emergencyContact: {
@@ -186,7 +186,7 @@ export interface IUpdateTeacherRequest {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country: string;
   };
   emergencyContact?: {
@@ -242,7 +242,7 @@ export interface ITeacherResponse {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country: string;
   };
   emergencyContact: {

@@ -1,10 +1,10 @@
-import { Document, Types, Model } from 'mongoose';
+import { Document, Types, Model } from "mongoose";
 export interface IParent {
     userId: Types.ObjectId;
     schoolId: Types.ObjectId;
     parentId: string;
     children: Types.ObjectId[];
-    relationship: 'Father' | 'Mother' | 'Guardian' | 'Step Parent' | 'Foster Parent' | 'Grandparent' | 'Other';
+    relationship: "Father" | "Mother" | "Guardian" | "Step Parent" | "Foster Parent" | "Grandparent" | "Other";
     occupation?: string;
     qualification?: string;
     monthlyIncome?: {
@@ -25,7 +25,7 @@ export interface IParent {
         email?: string;
     };
     preferences: {
-        communicationMethod: 'Email' | 'SMS' | 'Phone Call' | 'All';
+        communicationMethod: "Email" | "SMS" | "Phone Call" | "All";
         receiveNewsletters: boolean;
         receiveAttendanceAlerts: boolean;
         receiveExamResults: boolean;
@@ -58,7 +58,7 @@ export interface ICreateParentRequest {
     email?: string;
     phone?: string;
     children: string[];
-    relationship: 'Father' | 'Mother' | 'Guardian' | 'Step Parent' | 'Foster Parent' | 'Grandparent' | 'Other';
+    relationship: "Father" | "Mother" | "Guardian" | "Step Parent" | "Foster Parent" | "Grandparent" | "Other";
     occupation?: string;
     qualification?: string;
     monthlyIncome?: {
@@ -69,7 +69,7 @@ export interface ICreateParentRequest {
         street?: string;
         city: string;
         state: string;
-        zipCode: string;
+        zipCode?: string;
         country?: string;
     };
     emergencyContact?: {
@@ -79,7 +79,7 @@ export interface ICreateParentRequest {
         email?: string;
     };
     preferences?: {
-        communicationMethod?: 'Email' | 'SMS' | 'Phone Call' | 'All';
+        communicationMethod?: "Email" | "SMS" | "Phone Call" | "All";
         receiveNewsletters?: boolean;
         receiveAttendanceAlerts?: boolean;
         receiveExamResults?: boolean;
@@ -88,7 +88,7 @@ export interface ICreateParentRequest {
 }
 export interface IUpdateParentRequest {
     children?: string[];
-    relationship?: 'Father' | 'Mother' | 'Guardian' | 'Step Parent' | 'Foster Parent' | 'Grandparent' | 'Other';
+    relationship?: "Father" | "Mother" | "Guardian" | "Step Parent" | "Foster Parent" | "Grandparent" | "Other";
     occupation?: string;
     qualification?: string;
     monthlyIncome?: {
@@ -99,7 +99,7 @@ export interface IUpdateParentRequest {
         street?: string;
         city: string;
         state: string;
-        zipCode: string;
+        zipCode?: string;
         country?: string;
     };
     emergencyContact?: {
@@ -109,7 +109,7 @@ export interface IUpdateParentRequest {
         email?: string;
     };
     preferences?: {
-        communicationMethod?: 'Email' | 'SMS' | 'Phone Call' | 'All';
+        communicationMethod?: "Email" | "SMS" | "Phone Call" | "All";
         receiveNewsletters?: boolean;
         receiveAttendanceAlerts?: boolean;
         receiveExamResults?: boolean;
@@ -142,7 +142,7 @@ export interface IParentResponse {
         street?: string;
         city: string;
         state: string;
-        zipCode: string;
+        zipCode?: string;
         country: string;
     };
     emergencyContact?: {

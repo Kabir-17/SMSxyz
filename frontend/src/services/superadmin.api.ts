@@ -17,7 +17,7 @@ export const superadminApi = {
       city: string;
       state: string;
       country: string;
-      postalCode: string;
+      postalCode?: string;
     };
     contact: {
       phone: string;

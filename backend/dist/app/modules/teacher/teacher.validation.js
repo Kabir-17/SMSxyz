@@ -2,6 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addDisciplinaryActionCommentValidationSchema = exports.resolveDisciplinaryActionValidationSchema = exports.issuePunishmentValidationSchema = exports.getTeachersStatsValidationSchema = exports.getTeachersBySubjectSchema = exports.deletePhotoValidationSchema = exports.uploadPhotosValidationSchema = exports.getTeachersValidationSchema = exports.deleteTeacherValidationSchema = exports.getTeacherValidationSchema = exports.updateTeacherValidationSchema = exports.createTeacherValidationSchema = void 0;
 const zod_1 = require("zod");
+const optionalTrimmedString = (schema) => zod_1.z.preprocess((val) => {
+    if (typeof val !== 'string') {
+        return val;
+    }
+    const trimmed = val.trim();
+    return trimmed === '' ? undefined : trimmed;
+}, schema.optional());
 const createTeacherValidationSchema = zod_1.z.object({
     body: zod_1.z.object({
         schoolId: zod_1.z
@@ -165,13 +172,7 @@ const createTeacherValidationSchema = zod_1.z.object({
                 .min(1, 'State is required')
                 .max(100, 'State cannot exceed 100 characters')
                 .trim(),
-            zipCode: zod_1.z
-                .string({
-                required_error: 'Zip code is required',
-            })
-                .min(1, 'Zip code is required')
-                .max(20, 'Zip code cannot exceed 20 characters')
-                .trim(),
+            zipCode: optionalTrimmedString(zod_1.z.string().max(20, 'Zip code cannot exceed 20 characters')),
             country: zod_1.z
                 .string()
                 .max(100, 'Country cannot exceed 100 characters')
@@ -397,9 +398,7 @@ const updateTeacherValidationSchema = zod_1.z.object({
                 .min(1, 'State is required')
                 .max(100, 'State cannot exceed 100 characters')
                 .trim(),
-            zipCode: zod_1.z
-                .string()
-                .regex(/^\d{5,6}$/, 'Invalid zip code format'),
+            zipCode: optionalTrimmedString(zod_1.z.string().max(20, 'Zip code cannot exceed 20 characters')),
             country: zod_1.z
                 .string()
                 .max(100, 'Country cannot exceed 100 characters')

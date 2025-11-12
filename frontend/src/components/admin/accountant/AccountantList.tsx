@@ -36,7 +36,7 @@ export interface Accountant {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country: string;
   };
   emergencyContact: {

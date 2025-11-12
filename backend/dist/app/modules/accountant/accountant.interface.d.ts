@@ -29,7 +29,7 @@ export interface IAccountant {
         street?: string;
         city: string;
         state: string;
-        zipCode: string;
+        zipCode?: string;
         country: string;
     };
     emergencyContact: {
@@ -114,7 +114,7 @@ export interface ICreateAccountantRequest {
         street?: string;
         city: string;
         state: string;
-        zipCode: string;
+        zipCode?: string;
         country: string;
     };
     emergencyContact: {
@@ -163,7 +163,7 @@ export interface IUpdateAccountantRequest {
         street?: string;
         city: string;
         state: string;
-        zipCode: string;
+        zipCode?: string;
         country: string;
     };
     emergencyContact?: {
@@ -213,7 +213,7 @@ export interface IAccountantResponse {
         street?: string;
         city: string;
         state: string;
-        zipCode: string;
+        zipCode?: string;
         country: string;
     };
     emergencyContact: {

@@ -42,7 +42,6 @@ const addressSchema = new Schema<ISchoolAddress>({
   },
   postalCode: {
     type: String,
-    required: [true, 'Postal code is required'],
     trim: true,
     maxlength: [20, 'Postal code cannot exceed 20 characters']
   },

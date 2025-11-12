@@ -260,9 +260,7 @@ const teacherSchema = new Schema<ITeacherDocument, ITeacherModel, ITeacherMethod
       },
       zipCode: {
         type: String,
-        required: [true, 'Zip code is required'],
         trim: true,
-        match: [/^\d{5,6}$/, 'Invalid zip code format'],
       },
       country: {
         type: String,

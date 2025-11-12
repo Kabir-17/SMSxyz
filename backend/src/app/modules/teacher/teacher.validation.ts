@@ -1,5 +1,17 @@
 import { z } from 'zod';
 
+const optionalTrimmedString = (schema: z.ZodString) =>
+  z.preprocess(
+    (val) => {
+      if (typeof val !== 'string') {
+        return val;
+      }
+      const trimmed = val.trim();
+      return trimmed === '' ? undefined : trimmed;
+    },
+    schema.optional()
+  );
+
 const createTeacherValidationSchema = z.object({
   body: z.object({
     schoolId: z
@@ -163,13 +175,9 @@ const createTeacherValidationSchema = z.object({
         .min(1, 'State is required')
         .max(100, 'State cannot exceed 100 characters')
         .trim(),
-      zipCode: z
-        .string({
-          required_error: 'Zip code is required',
-        })
-        .min(1, 'Zip code is required')
-        .max(20, 'Zip code cannot exceed 20 characters')
-        .trim(),
+      zipCode: optionalTrimmedString(
+        z.string().max(20, 'Zip code cannot exceed 20 characters')
+      ),
       country: z
         .string()
         .max(100, 'Country cannot exceed 100 characters')
@@ -396,9 +404,9 @@ const updateTeacherValidationSchema = z.object({
         .min(1, 'State is required')
         .max(100, 'State cannot exceed 100 characters')
         .trim(),
-      zipCode: z
-        .string()
-        .regex(/^\d{5,6}$/, 'Invalid zip code format'),
+      zipCode: optionalTrimmedString(
+        z.string().max(20, 'Zip code cannot exceed 20 characters')
+      ),
       country: z
         .string()
         .max(100, 'Country cannot exceed 100 characters')

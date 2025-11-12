@@ -51,6 +51,16 @@ const DefaulterManagement: React.FC = () => {
 
   const totalOverdueAmount = filteredDefaulters.reduce((sum, d) => sum + d.totalOverdue, 0);
 
+  const formatCurrency = (amount?: number | null) => {
+    const value = typeof amount === 'number' && Number.isFinite(amount)
+      ? amount
+      : 0;
+    const formatted = new Intl.NumberFormat('en-IN', {
+      maximumFractionDigits: 0,
+    }).format(value);
+    return `GNF ${formatted}`;
+  };
+
   const handleExport = () => {
     const csvContent = [
       ['Student ID', 'Student Name', 'Class', 'Roll No', 'Parent Contact', 'Total Due', 'Overdue Amount', 'Overdue Months', 'Last Payment', 'Status'],
@@ -128,14 +138,14 @@ const DefaulterManagement: React.FC = () => {
             <Card className="bg-orange-50 border-orange-200">
               <CardContent className="pt-6">
                 <div className="text-sm text-gray-600">Total Overdue Amount</div>
-                <div className="text-3xl font-bold text-orange-600">₹{totalOverdueAmount.toLocaleString()}</div>
+                <div className="text-3xl font-bold text-orange-600">{formatCurrency(totalOverdueAmount)}</div>
               </CardContent>
             </Card>
             <Card className="bg-yellow-50 border-yellow-200">
               <CardContent className="pt-6">
                 <div className="text-sm text-gray-600">Average Overdue</div>
                 <div className="text-3xl font-bold text-yellow-600">
-                  ₹{filteredDefaulters.length > 0 ? Math.round(totalOverdueAmount / filteredDefaulters.length).toLocaleString() : 0}
+                  {formatCurrency(filteredDefaulters.length > 0 ? totalOverdueAmount / filteredDefaulters.length : 0)}
                 </div>
               </CardContent>
             </Card>
@@ -167,13 +177,13 @@ const DefaulterManagement: React.FC = () => {
                         <div>
                           <div className="text-xs text-gray-500">Total Due</div>
                           <div className="text-lg font-semibold text-orange-600">
-                            ₹{defaulter.totalDueAmount.toLocaleString()}
+                            {formatCurrency(defaulter.totalDueAmount)}
                           </div>
                         </div>
                         <div>
                           <div className="text-xs text-gray-500">Overdue Amount</div>
                           <div className="text-lg font-semibold text-red-600">
-                            ₹{defaulter.totalOverdue.toLocaleString()}
+                            {formatCurrency(defaulter.totalOverdue)}
                           </div>
                         </div>
                         <div>

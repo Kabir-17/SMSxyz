@@ -9,7 +9,7 @@ export interface School {
     city: string;
     state: string;
     country: string;
-    postalCode: string;
+    postalCode?: string;
   };
   contact: {
     phone: string;

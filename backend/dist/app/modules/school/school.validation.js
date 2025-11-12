@@ -2,12 +2,19 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resetAdminPasswordValidationSchema = exports.getSchoolsValidationSchema = exports.deleteSchoolValidationSchema = exports.getSchoolValidationSchema = exports.updateSchoolValidationSchema = exports.createSchoolValidationSchema = void 0;
 const zod_1 = require("zod");
+const optionalTrimmedString = (schema) => zod_1.z.preprocess((val) => {
+    if (typeof val !== 'string') {
+        return val;
+    }
+    const trimmed = val.trim();
+    return trimmed === '' ? undefined : trimmed;
+}, schema.optional());
 const addressValidationSchema = zod_1.z.object({
     street: zod_1.z.string().min(1, 'Street is required').max(200, 'Street cannot exceed 200 characters'),
     city: zod_1.z.string().min(1, 'City is required').max(100, 'City cannot exceed 100 characters'),
     state: zod_1.z.string().min(1, 'State is required').max(100, 'State cannot exceed 100 characters'),
     country: zod_1.z.string().min(1, 'Country is required').max(100, 'Country cannot exceed 100 characters'),
-    postalCode: zod_1.z.string().min(1, 'Postal code is required').max(20, 'Postal code cannot exceed 20 characters'),
+    postalCode: optionalTrimmedString(zod_1.z.string().max(20, 'Postal code cannot exceed 20 characters')),
     coordinates: zod_1.z.object({
         latitude: zod_1.z.number().min(-90).max(90),
         longitude: zod_1.z.number().min(-180).max(180)

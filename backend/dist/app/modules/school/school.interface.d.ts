@@ -10,7 +10,7 @@ export interface ISchoolAddress {
     city: string;
     state: string;
     country: string;
-    postalCode: string;
+    postalCode?: string;
     coordinates?: {
         latitude: number;
         longitude: number;

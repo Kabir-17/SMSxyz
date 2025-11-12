@@ -1,13 +1,27 @@
 import { z } from 'zod';
 
+const optionalTrimmedString = (schema: z.ZodString) =>
+  z.preprocess(
+    (val) => {
+      if (typeof val !== 'string') {
+        return val;
+      }
+      const trimmed = val.trim();
+      return trimmed === '' ? undefined : trimmed;
+    },
+    schema.optional()
+  );
+
 // Address validation schema
 const addressValidationSchema = z.object({
   street: z.string().min(1, 'Street is required').max(200, 'Street cannot exceed 200 characters'),
   city: z.string().min(1, 'City is required').max(100, 'City cannot exceed 100 characters'),
   state: z.string().min(1, 'State is required').max(100, 'State cannot exceed 100 characters'),
   country: z.string().min(1, 'Country is required').max(100, 'Country cannot exceed 100 characters'),
-  postalCode: z.string().min(1, 'Postal code is required').max(20, 'Postal code cannot exceed 20 characters'),
-  coordinates: z.object({
+  postalCode: optionalTrimmedString(
+    z.string().max(20, 'Postal code cannot exceed 20 characters')
+  ),
+  coordinates: z.object({  
     latitude: z.number().min(-90).max(90),
     longitude: z.number().min(-180).max(180)
   }).optional()

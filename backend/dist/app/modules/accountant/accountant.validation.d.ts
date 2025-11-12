@@ -72,20 +72,20 @@ declare const createAccountantValidationSchema: z.ZodObject<{
             street: z.ZodOptional<z.ZodString>;
             city: z.ZodString;
             state: z.ZodString;
-            zipCode: z.ZodString;
+            zipCode: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             country: z.ZodString;
         }, "strip", z.ZodTypeAny, {
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         }, {
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         }>;
         emergencyContact: z.ZodObject<{
             name: z.ZodString;
@@ -128,8 +128,8 @@ declare const createAccountantValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         };
         bloodGroup: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
         dob: string;
@@ -176,8 +176,8 @@ declare const createAccountantValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         };
         bloodGroup: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
         dob: string;
@@ -228,8 +228,8 @@ declare const createAccountantValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         };
         bloodGroup: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
         dob: string;
@@ -278,8 +278,8 @@ declare const createAccountantValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         };
         bloodGroup: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
         dob: string;
@@ -400,20 +400,20 @@ declare const updateAccountantValidationSchema: z.ZodObject<{
             street: z.ZodOptional<z.ZodString>;
             city: z.ZodString;
             state: z.ZodString;
-            zipCode: z.ZodString;
+            zipCode: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             country: z.ZodString;
         }, "strip", z.ZodTypeAny, {
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         }, {
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         }>>;
         emergencyContact: z.ZodOptional<z.ZodObject<{
             name: z.ZodString;
@@ -457,8 +457,8 @@ declare const updateAccountantValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         } | undefined;
         bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-" | undefined;
         dob?: string | undefined;
@@ -505,8 +505,8 @@ declare const updateAccountantValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         } | undefined;
         bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-" | undefined;
         dob?: string | undefined;
@@ -558,8 +558,8 @@ declare const updateAccountantValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         } | undefined;
         bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-" | undefined;
         dob?: string | undefined;
@@ -611,8 +611,8 @@ declare const updateAccountantValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         } | undefined;
         bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-" | undefined;
         dob?: string | undefined;

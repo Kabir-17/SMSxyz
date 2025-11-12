@@ -45,7 +45,7 @@ interface AccountantFormData {
     street: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country: string;
   };
 
@@ -491,9 +491,7 @@ const AccountantForm: React.FC<AccountantFormProps> = ({ accountant, isOpen, onC
     if (!formData.address.state.trim()) {
       newErrors["address.state"] = "State is required";
     }
-    if (!formData.address.zipCode.trim()) {
-      newErrors["address.zipCode"] = "Zip code is required";
-    }
+
 
     // Qualifications validation
     if (formData.qualifications.length === 0) {
@@ -561,7 +559,10 @@ const AccountantForm: React.FC<AccountantFormProps> = ({ accountant, isOpen, onC
           dob: formData.dob,
           joinDate: formData.joinDate,
           experience: formData.experience,
-          address: formData.address,
+          address: {
+            ...formData.address,
+            zipCode: formData.address.zipCode?.trim() || undefined,
+          },
           qualifications: formData.qualifications,
           emergencyContact: formData.emergencyContact,
           salary: formData.salary,
@@ -602,7 +603,11 @@ const AccountantForm: React.FC<AccountantFormProps> = ({ accountant, isOpen, onC
       submitData.append("experience", JSON.stringify(formData.experience));
 
       // Add address (required)
-      submitData.append("address", JSON.stringify(formData.address));
+      const cleanedAddress = {
+        ...formData.address,
+        zipCode: formData.address.zipCode?.trim() || undefined,
+      };
+      submitData.append("address", JSON.stringify(cleanedAddress));
 
       // Add qualifications (required)
       submitData.append("qualifications", JSON.stringify(formData.qualifications));
@@ -1015,10 +1020,10 @@ const AccountantForm: React.FC<AccountantFormProps> = ({ accountant, isOpen, onC
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Zip Code <span className="text-red-500">*</span>
+                        Zip Code
                       </label>
                       <Input
-                        value={formData.address.zipCode}
+                        value={formData.address.zipCode || ""}
                         onChange={(e) =>
                           handleNestedChange("address", "zipCode", e.target.value)
                         }
@@ -1328,7 +1333,7 @@ const AccountantForm: React.FC<AccountantFormProps> = ({ accountant, isOpen, onC
                               alt={`Preview ${index + 1}`}
                               className="w-full h-24 object-cover rounded-lg"
                             />
-                            <button
+                            <button aria-label="remove"
                               type="button"
                               onClick={() => removePhoto(index)}
                               className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-600"

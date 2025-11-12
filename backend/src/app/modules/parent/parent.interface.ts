@@ -1,11 +1,18 @@
-import { Document, Types, Model } from 'mongoose';
+import { Document, Types, Model } from "mongoose";
 
 export interface IParent {
   userId: Types.ObjectId;
   schoolId: Types.ObjectId;
   parentId: string; // Auto-generated unique ID (e.g., SCH001-PAR-2025-001)
   children: Types.ObjectId[]; // References to Student documents
-  relationship: 'Father' | 'Mother' | 'Guardian' | 'Step Parent' | 'Foster Parent' | 'Grandparent' | 'Other';
+  relationship:
+    | "Father"
+    | "Mother"
+    | "Guardian"
+    | "Step Parent"
+    | "Foster Parent"
+    | "Grandparent"
+    | "Other";
   occupation?: string;
   qualification?: string;
   monthlyIncome?: {
@@ -26,7 +33,7 @@ export interface IParent {
     email?: string;
   };
   preferences: {
-    communicationMethod: 'Email' | 'SMS' | 'Phone Call' | 'All';
+    communicationMethod: "Email" | "SMS" | "Phone Call" | "All";
     receiveNewsletters: boolean;
     receiveAttendanceAlerts: boolean;
     receiveExamResults: boolean;
@@ -53,7 +60,11 @@ export interface IParentModel extends Model<IParentDocument> {
   findBySchool(schoolId: string): Promise<IParentDocument[]>;
   findByStudent(studentId: string): Promise<IParentDocument[]>;
   findByParentId(parentId: string): Promise<IParentDocument | null>;
-  generateNextParentId(schoolId: string, year?: number, session?: any): Promise<string>;
+  generateNextParentId(
+    schoolId: string,
+    year?: number,
+    session?: any
+  ): Promise<string>;
 }
 
 // Request/Response interfaces
@@ -64,7 +75,14 @@ export interface ICreateParentRequest {
   email?: string;
   phone?: string;
   children: string[]; // Student IDs
-  relationship: 'Father' | 'Mother' | 'Guardian' | 'Step Parent' | 'Foster Parent' | 'Grandparent' | 'Other';
+  relationship:
+    | "Father"
+    | "Mother"
+    | "Guardian"
+    | "Step Parent"
+    | "Foster Parent"
+    | "Grandparent"
+    | "Other";
   occupation?: string;
   qualification?: string;
   monthlyIncome?: {
@@ -75,7 +93,7 @@ export interface ICreateParentRequest {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country?: string;
   };
   emergencyContact?: {
@@ -85,7 +103,7 @@ export interface ICreateParentRequest {
     email?: string;
   };
   preferences?: {
-    communicationMethod?: 'Email' | 'SMS' | 'Phone Call' | 'All';
+    communicationMethod?: "Email" | "SMS" | "Phone Call" | "All";
     receiveNewsletters?: boolean;
     receiveAttendanceAlerts?: boolean;
     receiveExamResults?: boolean;
@@ -95,7 +113,14 @@ export interface ICreateParentRequest {
 
 export interface IUpdateParentRequest {
   children?: string[];
-  relationship?: 'Father' | 'Mother' | 'Guardian' | 'Step Parent' | 'Foster Parent' | 'Grandparent' | 'Other';
+  relationship?:
+    | "Father"
+    | "Mother"
+    | "Guardian"
+    | "Step Parent"
+    | "Foster Parent"
+    | "Grandparent"
+    | "Other";
   occupation?: string;
   qualification?: string;
   monthlyIncome?: {
@@ -106,7 +131,7 @@ export interface IUpdateParentRequest {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country?: string;
   };
   emergencyContact?: {
@@ -116,7 +141,7 @@ export interface IUpdateParentRequest {
     email?: string;
   };
   preferences?: {
-    communicationMethod?: 'Email' | 'SMS' | 'Phone Call' | 'All';
+    communicationMethod?: "Email" | "SMS" | "Phone Call" | "All";
     receiveNewsletters?: boolean;
     receiveAttendanceAlerts?: boolean;
     receiveExamResults?: boolean;
@@ -150,7 +175,7 @@ export interface IParentResponse {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country: string;
   };
   emergencyContact?: {

@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  DollarSign,
+  Coins,
   TrendingUp,
   TrendingDown,
   AlertCircle,
@@ -113,13 +113,16 @@ const FinancialDashboard: React.FC = () => {
   }, [selectedYear, user?.schoolId]);
 
   // Format currency - without symbol
-  const formatCurrency = (amount: number | undefined) => {
-    if (amount === undefined || amount === null || isNaN(amount)) {
-      return "0";
-    }
-    return new Intl.NumberFormat("en-IN", {
+  const formatCurrency = (amount?: number | null) => {
+    const value = typeof amount === "number" && Number.isFinite(amount)
+      ? amount
+      : 0;
+
+    const formatted = new Intl.NumberFormat("en-IN", {
       maximumFractionDigits: 0,
-    }).format(amount);
+    }).format(value);
+
+    return `GNF ${formatted}`;
   };
 
   // Format percentage
@@ -207,7 +210,7 @@ const FinancialDashboard: React.FC = () => {
             <CardTitle className="text-sm font-medium text-gray-600">
               Expected Revenue
             </CardTitle>
-            <DollarSign className="h-5 w-5 text-blue-600" />
+            <Coins className="h-5 w-5 text-blue-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-900">
@@ -362,7 +365,7 @@ const FinancialDashboard: React.FC = () => {
                     tooltip: {
                       callbacks: {
                         label: function(context) {
-                          return context.dataset.label + ': ₹' + formatCurrency(context.parsed.y);
+                          return context.dataset.label + ': ' + formatCurrency(context.parsed.y);
                         }
                       }
                     }
@@ -372,7 +375,7 @@ const FinancialDashboard: React.FC = () => {
                       beginAtZero: true,
                       ticks: {
                         callback: function(value) {
-                          return '₹' + formatCurrency(Number(value));
+                          return formatCurrency(Number(value));
                         }
                       }
                     }
@@ -431,7 +434,7 @@ const FinancialDashboard: React.FC = () => {
                           const value = context.parsed;
                           const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
                           const percentage = ((value / total) * 100).toFixed(1);
-                          return label + ': ₹' + formatCurrency(value) + ' (' + percentage + '%)';
+                          return label + ': ' + formatCurrency(value) + ' (' + percentage + '%)';
                         }
                       }
                     }
@@ -483,7 +486,7 @@ const FinancialDashboard: React.FC = () => {
                       label: function(context) {
                         const label = context.dataset.label || '';
                         const value = context.parsed.y;
-                        return label + ': ₹' + formatCurrency(value);
+                        return label + ': ' + formatCurrency(value);
                       },
                       afterLabel: function(context) {
                         const grade = gradeWiseBreakdown[context.dataIndex];
@@ -500,7 +503,7 @@ const FinancialDashboard: React.FC = () => {
                     beginAtZero: true,
                     ticks: {
                       callback: function(value) {
-                        return '₹' + formatCurrency(Number(value));
+                        return formatCurrency(Number(value));
                       }
                     }
                   }
@@ -539,7 +542,7 @@ const FinancialDashboard: React.FC = () => {
                           : "bg-yellow-100 text-yellow-700"
                       }`}
                     >
-                      <DollarSign className="h-5 w-5" />
+                      <Coins className="h-5 w-5" />
                     </div>
                     <div>
                       <p className="font-medium text-gray-900">

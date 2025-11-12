@@ -9,7 +9,7 @@ declare const createSchoolValidationSchema: z.ZodObject<{
             city: z.ZodString;
             state: z.ZodString;
             country: z.ZodString;
-            postalCode: z.ZodString;
+            postalCode: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             coordinates: z.ZodOptional<z.ZodObject<{
                 latitude: z.ZodNumber;
                 longitude: z.ZodNumber;
@@ -25,7 +25,7 @@ declare const createSchoolValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            postalCode: string;
+            postalCode?: string | undefined;
             coordinates?: {
                 latitude: number;
                 longitude: number;
@@ -35,7 +35,7 @@ declare const createSchoolValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            postalCode: string;
+            postalCode?: unknown;
             coordinates?: {
                 latitude: number;
                 longitude: number;
@@ -89,7 +89,7 @@ declare const createSchoolValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            postalCode: string;
+            postalCode?: string | undefined;
             coordinates?: {
                 latitude: number;
                 longitude: number;
@@ -121,7 +121,7 @@ declare const createSchoolValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            postalCode: string;
+            postalCode?: unknown;
             coordinates?: {
                 latitude: number;
                 longitude: number;
@@ -155,7 +155,7 @@ declare const createSchoolValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            postalCode: string;
+            postalCode?: string | undefined;
             coordinates?: {
                 latitude: number;
                 longitude: number;
@@ -189,7 +189,7 @@ declare const createSchoolValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            postalCode: string;
+            postalCode?: unknown;
             coordinates?: {
                 latitude: number;
                 longitude: number;

@@ -547,7 +547,7 @@ const SuperadminHome: React.FC<SuperadminHomeProps> = ({
                     </div>
                   </Link>
 
-                  <Link
+                  {/* <Link
                     to="/superadmin/reports"
                     className="group bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white p-4 rounded-xl text-sm font-semibold transition-all duration-300 shadow-md hover:shadow-xl active:scale-95 hover:scale-105 text-center block"
                   >
@@ -567,7 +567,7 @@ const SuperadminHome: React.FC<SuperadminHomeProps> = ({
                       </svg>
                       View Reports
                     </div>
-                  </Link>
+                  </Link> */}
 
                   <Link
                     to="/superadmin/system-config"

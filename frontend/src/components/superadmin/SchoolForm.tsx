@@ -15,7 +15,7 @@ interface School {
     city: string;
     state: string;
     country: string;
-    postalCode: string;
+    postalCode?: string;
   };
   contact: {
     phone: string;
@@ -232,6 +232,10 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
       const cleanedFormData = {
         ...formData,
         // Remove empty website to avoid URL validation error
+        address: {
+          ...formData.address,
+          postalCode: formData.address.postalCode?.trim() || undefined,
+        },
         contact: {
           ...formData.contact,
           website: formData.contact.website?.trim() || undefined
@@ -430,7 +434,7 @@ const SchoolForm: React.FC<SchoolFormProps> = ({
                     Postal Code
                   </label>
                   <Input
-                    value={formData.address.postalCode}
+                    value={formData.address.postalCode || ""}
                     onChange={(e) => handleInputChange('address', 'postalCode', e.target.value)}
                     placeholder="Postal Code"
                   />

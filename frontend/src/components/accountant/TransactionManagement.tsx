@@ -58,6 +58,16 @@ const TransactionManagement: React.FC = () => {
 
   const totalAmount = filteredTransactions.reduce((sum, txn) => sum + txn.amount, 0);
 
+  const formatCurrency = (amount?: number | null) => {
+    const value = typeof amount === 'number' && Number.isFinite(amount)
+      ? amount
+      : 0;
+    const formatted = new Intl.NumberFormat('en-IN', {
+      maximumFractionDigits: 0,
+    }).format(value);
+    return `GNF ${formatted}`;
+  };
+
   const handleExport = () => {
     // Implement CSV export
     const csvContent = [
@@ -137,14 +147,14 @@ const TransactionManagement: React.FC = () => {
             <Card className="bg-green-50">
               <CardContent className="pt-6">
                 <div className="text-sm text-gray-600">Total Amount</div>
-                <div className="text-2xl font-bold text-green-600">₹{totalAmount.toLocaleString()}</div>
+                <div className="text-2xl font-bold text-green-600">{formatCurrency(totalAmount)}</div>
               </CardContent>
             </Card>
             <Card className="bg-purple-50">
               <CardContent className="pt-6">
                 <div className="text-sm text-gray-600">Average Transaction</div>
                 <div className="text-2xl font-bold text-purple-600">
-                  ₹{filteredTransactions.length > 0 ? Math.round(totalAmount / filteredTransactions.length).toLocaleString() : 0}
+                  {formatCurrency(filteredTransactions.length > 0 ? totalAmount / filteredTransactions.length : 0)}
                 </div>
               </CardContent>
             </Card>
@@ -190,7 +200,7 @@ const TransactionManagement: React.FC = () => {
                       {txn.grade || 'N/A'}-{txn.section || 'N/A'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">
-                      ₹{txn.amount.toLocaleString()}
+                      {formatCurrency(txn.amount)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full

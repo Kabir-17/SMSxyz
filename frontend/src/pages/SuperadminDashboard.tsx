@@ -5,7 +5,6 @@ import SuperadminHome from "@/components/superadmin/SuperadminHome";
 import SchoolManagement from "@/components/superadmin/SchoolManagement";
 import SystemSettings from "@/components/superadmin/SystemSettings";
 import SuperAdminProfile from "@/components/superadmin/SuperAdminProfile";
-import SystemReports from "@/components/superadmin/SystemReports";
 import OrangeSmsSettings from "@/components/superadmin/OrangeSmsSettings";
 import { useAuth } from "../context/AuthContext";
 import type {
@@ -67,18 +66,21 @@ const SuperadminDashboard: React.FC = () => {
             <SchoolManagement schools={schools} onUpdate={loadDashboardData} />
           }
         />
-        <Route
+        {/* <Route
           path="/reports"
-          element={<SystemReports />}
-        />
+          element={
+            <SystemReports
+              stats={stats}
+              loading={loading}
+              onRefresh={loadDashboardData}
+            />
+          }
+        /> */}
         <Route
           path="/settings"
           element={<SystemSettings onUpdate={loadDashboardData} />}
         />
-        <Route
-          path="/profile"
-          element={<SuperAdminProfile />}
-        />
+        <Route path="/profile" element={<SuperAdminProfile />} />
         <Route
           path="/system-config"
           element={<SystemSettings onUpdate={loadDashboardData} />}

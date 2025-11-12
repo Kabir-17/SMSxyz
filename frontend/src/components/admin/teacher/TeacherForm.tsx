@@ -43,7 +43,7 @@ interface TeacherFormData {
     street: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country: string;
   };
   
@@ -103,7 +103,7 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ onBack }) => {
     phone: "",
     employeeId: "",
     designation: "Teacher",
-    bloodGroup: "O+",
+  bloodGroup: "A+",
     dob: "",
     joinDate: "",
     
@@ -223,9 +223,6 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ onBack }) => {
     if (!formData.address.state.trim()) {
       newErrors['address.state'] = "State is required";
     }
-    if (!formData.address.zipCode.trim()) {
-      newErrors['address.zipCode'] = "Zip code is required";
-    }
 
     // Qualifications validation
     if (formData.qualifications.length === 0) {
@@ -315,7 +312,11 @@ const TeacherForm: React.FC<TeacherFormProps> = ({ onBack }) => {
       submitData.append("experience", JSON.stringify(formData.experience));
 
       // Add address (required)
-      submitData.append("address", JSON.stringify(formData.address));
+      const cleanedAddress = {
+        ...formData.address,
+        zipCode: formData.address.zipCode?.trim() || undefined,
+      };
+      submitData.append("address", JSON.stringify(cleanedAddress));
 
       // Add qualifications (required)
       submitData.append("qualifications", JSON.stringify(formData.qualifications));

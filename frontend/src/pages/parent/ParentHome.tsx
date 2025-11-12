@@ -278,115 +278,117 @@ export const ParentHome: React.FC<ParentHomeProps> = ({
             {/** Render recent activity from dashboardData.recentActivity if available, otherwise fall back to static examples */}
             {(dashboardData?.recentActivity &&
             dashboardData.recentActivity.length > 0
-              ? dashboardData.recentActivity : []
-            //   : [
-            //       {
-            //         type: "homework",
-            //         title: "Homework submitted for Mathematics",
-            //         timeAgo: "2 hours ago",
-            //         href: "/parent/homework",
-            //       },
-            //       {
-            //         type: "attendance",
-            //         title: "Present marked for all subjects",
-            //         timeAgo: "1 day ago",
-            //         href: "/parent/attendance",
-            //       },
-            //       {
-            //         type: "notice",
-            //         title: "Parent-Teacher meeting tomorrow",
-            //         timeAgo: "3 days ago",
-            //         href: "/parent/notices",
-            //       },
-            //     ]
-            ).map((item: any, idx: number) => {
-              // Normalize fields from possible server shapes
-              const title =
-                item.title || item.message || item.subject || "Activity";
-              const timeAgo =
-                item.timeAgo || item.relativeTime || item.createdAt || "";
-              const href =
-                item.href ||
-                (item.type === "homework"
-                  ? "/parent/homework"
-                  : item.type === "attendance"
-                  ? "/parent/attendance"
-                  : "/parent/notices");
+              ? dashboardData.recentActivity
+              : []
+            )
+              //   : [
+              //       {
+              //         type: "homework",
+              //         title: "Homework submitted for Mathematics",
+              //         timeAgo: "2 hours ago",
+              //         href: "/parent/homework",
+              //       },
+              //       {
+              //         type: "attendance",
+              //         title: "Present marked for all subjects",
+              //         timeAgo: "1 day ago",
+              //         href: "/parent/attendance",
+              //       },
+              //       {
+              //         type: "notice",
+              //         title: "Parent-Teacher meeting tomorrow",
+              //         timeAgo: "3 days ago",
+              //         href: "/parent/notices",
+              //       },
+              //     ]
+              .map((item: any, idx: number) => {
+                // Normalize fields from possible server shapes
+                const title =
+                  item.title || item.message || item.subject || "Activity";
+                const timeAgo =
+                  item.timeAgo || item.relativeTime || item.createdAt || "";
+                const href =
+                  item.href ||
+                  (item.type === "homework"
+                    ? "/parent/homework"
+                    : item.type === "attendance"
+                    ? "/parent/attendance"
+                    : "/parent/notices");
 
-              const icon = (() => {
-                switch (item.type) {
-                  case "homework":
-                    return (
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <svg
-                          className="w-4 h-4 text-blue-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </div>
-                    );
-                  case "attendance":
-                    return (
-                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <svg
-                          className="w-4 h-4 text-green-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                          />
-                        </svg>
-                      </div>
-                    );
-                  case "notice":
-                  default:
-                    return (
-                      <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                        <svg
-                          className="w-4 h-4 text-yellow-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L5.082 16.5c-.77.833.192 2.5 1.732 2.5z"
-                          />
-                        </svg>
-                      </div>
-                    );
-                }
-              })();
+                const icon = (() => {
+                  switch (item.type) {
+                    case "homework":
+                      return (
+                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                          <svg
+                            className="w-4 h-4 text-blue-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </div>
+                      );
+                    case "attendance":
+                      return (
+                        <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                          <svg
+                            className="w-4 h-4 text-green-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                            />
+                          </svg>
+                        </div>
+                      );
+                    case "notice":
+                    default:
+                      return (
+                        <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
+                          <svg
+                            className="w-4 h-4 text-yellow-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L5.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                            />
+                          </svg>
+                        </div>
+                      );
+                  }
+                })();
 
-              return (
-                <button
-                  key={idx}
-                  onClick={() => navigate(href)}
-                  className="flex items-start space-x-3 w-full text-left"
-                >
-                  <div className="flex-shrink-0">{icon}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-gray-900">{title}</p>
-                    <p className="text-xs text-gray-500">{timeAgo}</p>
-                  </div>
-                </button>
-              );
-            })}
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => navigate(href)}
+                    className="flex items-start space-x-3 w-full text-left"
+                  >
+                    <div className="flex-shrink-0">{icon}</div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-gray-900">{title}</p>
+                      <p className="text-xs text-gray-500">{timeAgo}</p>
+                    </div>
+                  </button>
+                );
+              })}
           </div>
         </div>
       </div>
@@ -427,10 +429,15 @@ const ChildrenFeeCards: React.FC = () => {
     }
   };
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-IN", {
+  const formatCurrency = (amount?: number | null) => {
+    const value =
+      typeof amount === "number" && Number.isFinite(amount) ? amount : 0;
+
+    const formatted = new Intl.NumberFormat("en-IN", {
       maximumFractionDigits: 0,
-    }).format(amount);
+    }).format(value);
+
+    return `GNF ${formatted}`;
   };
 
   if (loading) {
@@ -471,21 +478,29 @@ const ChildrenFeeCards: React.FC = () => {
             Total Fee Summary
           </h3>
           <span className="text-sm text-gray-600">
-            {feeData.totalChildren} {feeData.totalChildren === 1 ? "Child" : "Children"}
+            {feeData.totalChildren}{" "}
+            {feeData.totalChildren === 1 ? "Child" : "Children"}
           </span>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-white rounded-lg p-4 shadow-sm">
-            <p className="text-sm text-gray-600 mb-1">Total Due (All Children)</p>
+            <p className="text-sm text-gray-600 mb-1">
+              Total Due (All Children)
+            </p>
             <p className="text-3xl font-bold text-purple-600">
               {formatCurrency(feeData.totalDueAmount)}
             </p>
           </div>
           <div className="bg-white rounded-lg p-4 shadow-sm">
-            <p className="text-sm text-gray-600 mb-1">Children with Pending Fees</p>
+            <p className="text-sm text-gray-600 mb-1">
+              Children with Pending Fees
+            </p>
             <p className="text-3xl font-bold text-orange-600">
-              {feeData.children.filter((child: any) => child.totalDue > 0).length}
+              {
+                feeData.children.filter((child: any) => child.totalDue > 0)
+                  .length
+              }
             </p>
           </div>
         </div>
@@ -493,11 +508,13 @@ const ChildrenFeeCards: React.FC = () => {
 
       {/* Individual Child Cards */}
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Children Fee Status</h3>
-        
+        <h3 className="text-lg font-semibold text-gray-900">
+          Children Fee Status
+        </h3>
+
         {feeData.children.map((child: any) => {
           const admissionRemaining = child.admissionFeeRemaining || 0;
-          
+
           return (
             <div
               key={child._id}
@@ -511,7 +528,9 @@ const ChildrenFeeCards: React.FC = () => {
                       {child.name}
                     </h4>
                     <p className="text-sm text-gray-600">
-                      Grade {child.grade} {child.section && ` - Section ${child.section}`} {child.rollNumber && `| Roll No: ${child.rollNumber}`}
+                      Grade {child.grade}{" "}
+                      {child.section && ` - Section ${child.section}`}{" "}
+                      {child.rollNumber && `| Roll No: ${child.rollNumber}`}
                     </p>
                   </div>
                   <span
@@ -608,7 +627,8 @@ const ChildrenFeeCards: React.FC = () => {
                           Next Payment: {formatCurrency(child.nextDue.amount)}
                         </p>
                         <p className="text-xs text-yellow-700">
-                          Due Date: {new Date(child.nextDue.dueDate).toLocaleDateString()}
+                          Due Date:{" "}
+                          {new Date(child.nextDue.dueDate).toLocaleDateString()}
                         </p>
                       </div>
                     </div>
@@ -663,7 +683,8 @@ const ChildrenFeeCards: React.FC = () => {
               Need to make a payment?
             </p>
             <p className="text-xs text-blue-700 mt-1">
-              Please visit the school accounts office or contact the accountant to make fee payments.
+              Please visit the school accounts office or contact the accountant
+              to make fee payments.
             </p>
           </div>
         </div>

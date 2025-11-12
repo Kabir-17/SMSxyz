@@ -38,7 +38,7 @@ export const teacherApi = {
       street?: string;
       city: string;
       state: string;
-      zipCode: string;
+      zipCode?: string;
       country: string;
     };
     emergencyContact: {
@@ -128,7 +128,7 @@ export const teacherApi = {
         street?: string;
         city: string;
         state: string;
-        zipCode: string;
+        zipCode?: string;
         country: string;
       };
       emergencyContact?: {

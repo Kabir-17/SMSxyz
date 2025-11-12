@@ -2,6 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getAccountantsStatsValidationSchema = exports.getAccountantsByDepartmentSchema = exports.deletePhotoValidationSchema = exports.uploadPhotosValidationSchema = exports.getAccountantsValidationSchema = exports.deleteAccountantValidationSchema = exports.getAccountantValidationSchema = exports.updateAccountantValidationSchema = exports.createAccountantValidationSchema = void 0;
 const zod_1 = require("zod");
+const optionalTrimmedString = (schema) => zod_1.z.preprocess((val) => {
+    if (typeof val !== 'string') {
+        return val;
+    }
+    const trimmed = val.trim();
+    return trimmed === '' ? undefined : trimmed;
+}, schema.optional());
 const createAccountantValidationSchema = zod_1.z.object({
     body: zod_1.z.object({
         schoolId: zod_1.z
@@ -160,10 +167,7 @@ const createAccountantValidationSchema = zod_1.z.object({
                 .min(1, 'State is required')
                 .max(100, 'State cannot exceed 100 characters')
                 .trim(),
-            zipCode: zod_1.z
-                .string()
-                .regex(/^\d{5,6}$/, 'Invalid zip code format')
-                .trim(),
+            zipCode: optionalTrimmedString(zod_1.z.string()),
             country: zod_1.z
                 .string()
                 .min(1, 'Country is required')
@@ -325,7 +329,7 @@ const updateAccountantValidationSchema = zod_1.z.object({
             street: zod_1.z.string().max(200).trim().optional(),
             city: zod_1.z.string().min(1).max(100).trim(),
             state: zod_1.z.string().min(1).max(100).trim(),
-            zipCode: zod_1.z.string().regex(/^\d{5,6}$/).trim(),
+            zipCode: optionalTrimmedString(zod_1.z.string()),
             country: zod_1.z.string().min(1).max(100).trim(),
         }).optional(),
         emergencyContact: zod_1.z.object({

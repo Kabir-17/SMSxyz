@@ -74,7 +74,7 @@ const SystemSettings: React.FC<SystemSettingsProps> = ({ onUpdate }) => {
       siteUrl: 'https://sms.example.com',
       timezone: 'UTC',
       language: 'English',
-      currency: 'USD',
+  currency: 'GNF',
       dateFormat: 'MM/DD/YYYY',
       timeFormat: '12-hour',
     },
@@ -327,6 +327,7 @@ const SystemSettings: React.FC<SystemSettingsProps> = ({ onUpdate }) => {
                       onChange={(e) => handleInputChange('general', 'currency', e.target.value)}
                       className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     >
+                      <option value="GNF">GNF - Guinean Franc</option>
                       <option value="USD">USD - US Dollar</option>
                       <option value="EUR">EUR - Euro</option>
                       <option value="GBP">GBP - British Pound</option>

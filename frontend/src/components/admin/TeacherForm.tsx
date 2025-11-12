@@ -31,7 +31,7 @@ interface Address {
   street?: string;
   city: string;
   state: string;
-  zipCode: string;
+  zipCode?: string;
   country: string;
 }
 
@@ -324,8 +324,13 @@ const TeacherForm: React.FC<TeacherFormProps> = ({
     setLoading(true);
     try {
       // Clean up arrays by removing empty strings
+      const cleanedZipCode = formData.address.zipCode?.trim();
       const cleanedFormData = {
         ...formData,
+        address: {
+          ...formData.address,
+          zipCode: cleanedZipCode || undefined,
+        },
         subjects: formData.subjects.filter((s) => s.trim()),
         qualifications: formData.qualifications.filter((q) => q.degree.trim()),
         photos: selectedPhotos,

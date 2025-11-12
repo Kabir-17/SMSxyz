@@ -12,7 +12,7 @@ import {
   GraduationCap,
   Heart,
   Shield,
-  DollarSign,
+  Coins,
   Clock,
   Building,
   UserCheck,
@@ -55,7 +55,7 @@ interface Accountant {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country: string;
   };
   emergencyContact: {
@@ -105,7 +105,7 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
   onEdit,
 }) => {
   const [showCredentials, setShowCredentials] = useState(false);
-  
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
@@ -117,21 +117,26 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
-      currency: "USD",
+      currency: "GNF",
+      currencyDisplay: "symbol",
+      minimumFractionDigits: 0,
     }).format(amount);
   };
 
   const getFullName = () => {
-    return accountant.user?.fullName || `${accountant.user?.firstName || "Unknown"} ${accountant.user?.lastName || "Accountant"}`;
+    return (
+      accountant.user?.fullName ||
+      `${accountant.user?.firstName || "Unknown"} ${
+        accountant.user?.lastName || "Accountant"
+      }`
+    );
   };
 
   const getStatusBadge = (isActive: boolean) => {
     return (
       <span
         className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-          isActive
-            ? "bg-green-100 text-green-800"
-            : "bg-red-100 text-red-800"
+          isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
         }`}
       >
         {isActive ? (
@@ -176,7 +181,9 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
                 <p className="text-indigo-100 text-lg">
                   {accountant.designation || "Accountant"}
                 </p>
-                <div className="mt-2">{getStatusBadge(accountant.isActive)}</div>
+                <div className="mt-2">
+                  {getStatusBadge(accountant.isActive)}
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-2">
@@ -256,7 +263,9 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
                     <label className="text-sm font-medium text-gray-500">
                       Age
                     </label>
-                    <p className="text-gray-900">{accountant.age || "N/A"} years</p>
+                    <p className="text-gray-900">
+                      {accountant.age || "N/A"} years
+                    </p>
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-500">
@@ -272,7 +281,9 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
                       Join Date
                     </label>
                     <p className="text-gray-900">
-                      {accountant.joinDate ? formatDate(accountant.joinDate) : "N/A"}
+                      {accountant.joinDate
+                        ? formatDate(accountant.joinDate)
+                        : "N/A"}
                     </p>
                   </div>
                   <div>
@@ -321,11 +332,15 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
                   </label>
                   <p className="text-gray-900">
                     {accountant.address
-                      ? `${accountant.address.street || ""} ${
-                          accountant.address.city
-                        }, ${accountant.address.state} ${
-                          accountant.address.zipCode
-                        }, ${accountant.address.country}`.trim()
+                      ? [
+                          accountant.address.street,
+                          accountant.address.city,
+                          accountant.address.state,
+                          accountant.address.zipCode,
+                          accountant.address.country,
+                        ]
+                          .filter((part) => part && String(part).trim())
+                          .join(", ")
                       : "N/A"}
                   </p>
                 </div>
@@ -350,7 +365,10 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
                   </label>
                   <p className="text-gray-900 flex items-center">
                     <Clock className="w-4 h-4 mr-1 text-blue-500" />
-                    {accountant.experience?.totalYears || accountant.totalExperience || 0} years
+                    {accountant.experience?.totalYears ||
+                      accountant.totalExperience ||
+                      0}{" "}
+                    years
                   </p>
                 </div>
                 {accountant.experience?.previousCompanies &&
@@ -360,25 +378,27 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
                         Previous Experience
                       </label>
                       <div className="space-y-3">
-                        {accountant.experience.previousCompanies.map((exp, index) => (
-                          <div
-                            key={index}
-                            className="bg-gray-50 p-3 rounded-lg border"
-                          >
-                            <div className="flex items-center gap-2 mb-1">
-                              <Building className="w-4 h-4 text-gray-600" />
-                              <span className="font-medium text-gray-900">
-                                {exp.companyName}
-                              </span>
+                        {accountant.experience.previousCompanies.map(
+                          (exp, index) => (
+                            <div
+                              key={index}
+                              className="bg-gray-50 p-3 rounded-lg border"
+                            >
+                              <div className="flex items-center gap-2 mb-1">
+                                <Building className="w-4 h-4 text-gray-600" />
+                                <span className="font-medium text-gray-900">
+                                  {exp.companyName}
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-600">
+                                {exp.position} • {exp.duration}
+                              </p>
+                              <p className="text-xs text-gray-500">
+                                {exp.fromDate} - {exp.toDate}
+                              </p>
                             </div>
-                            <p className="text-sm text-gray-600">
-                              {exp.position} • {exp.duration}
-                            </p>
-                            <p className="text-xs text-gray-500">
-                              {exp.fromDate} - {exp.toDate}
-                            </p>
-                          </div>
-                        ))}
+                          )
+                        )}
                       </div>
                     </div>
                   )}
@@ -386,26 +406,27 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
             </Card>
 
             {/* Responsibilities */}
-            {accountant.responsibilities && accountant.responsibilities.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <FileText className="w-5 h-5 mr-2 text-blue-600" />
-                    Responsibilities
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {accountant.responsibilities.map((resp, index) => (
-                      <li key={index} className="flex items-start gap-2">
-                        <span className="text-blue-600 mt-1">•</span>
-                        <span className="text-gray-900">{resp}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            )}
+            {accountant.responsibilities &&
+              accountant.responsibilities.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <FileText className="w-5 h-5 mr-2 text-blue-600" />
+                      Responsibilities
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {accountant.responsibilities.map((resp, index) => (
+                        <li key={index} className="flex items-start gap-2">
+                          <span className="text-blue-600 mt-1">•</span>
+                          <span className="text-gray-900">{resp}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
           </div>
 
           {/* Qualifications and Certifications */}
@@ -419,7 +440,8 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {accountant.qualifications && accountant.qualifications.length > 0 ? (
+                {accountant.qualifications &&
+                accountant.qualifications.length > 0 ? (
                   <div className="space-y-3">
                     {accountant.qualifications.map((qual, index) => (
                       <div
@@ -448,26 +470,27 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
             </Card>
 
             {/* Certifications */}
-            {accountant.certifications && accountant.certifications.length > 0 && (
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Award className="w-5 h-5 mr-2 text-purple-600" />
-                    Certifications
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {accountant.certifications.map((cert, index) => (
-                      <li key={index} className="flex items-center gap-2">
-                        <Award className="w-4 h-4 text-purple-600" />
-                        <span className="text-gray-900">{cert}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            )}
+            {accountant.certifications &&
+              accountant.certifications.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center">
+                      <Award className="w-5 h-5 mr-2 text-purple-600" />
+                      Certifications
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {accountant.certifications.map((cert, index) => (
+                        <li key={index} className="flex items-center gap-2">
+                          <Award className="w-4 h-4 text-purple-600" />
+                          <span className="text-gray-900">{cert}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
           </div>
 
           {/* Emergency Contact & Salary */}
@@ -523,7 +546,7 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <DollarSign className="w-5 h-5 mr-2 text-green-600" />
+                    <Coins className="w-5 h-5 mr-2 text-green-600" />
                     Salary Information
                   </CardTitle>
                 </CardHeader>
@@ -594,12 +617,16 @@ const AccountantDetailView: React.FC<AccountantDetailViewProps> = ({
                     Access Status
                   </label>
                   <div className="flex items-center gap-2">
-                    <div className={`h-2 w-2 rounded-full ${
-                      accountant.isActive ? "bg-green-500" : "bg-red-500"
-                    }`}></div>
-                    <span className={`text-sm font-medium ${
-                      accountant.isActive ? "text-green-700" : "text-red-700"
-                    }`}>
+                    <div
+                      className={`h-2 w-2 rounded-full ${
+                        accountant.isActive ? "bg-green-500" : "bg-red-500"
+                      }`}
+                    ></div>
+                    <span
+                      className={`text-sm font-medium ${
+                        accountant.isActive ? "text-green-700" : "text-red-700"
+                      }`}
+                    >
                       {accountant.isActive ? "Active" : "Inactive"}
                     </span>
                   </div>

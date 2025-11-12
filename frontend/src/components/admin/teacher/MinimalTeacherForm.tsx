@@ -32,7 +32,7 @@ interface MinimalTeacherFormData {
     street?: string;
     city: string;
     state: string;
-    zipCode: string;
+    zipCode?: string;
     country?: string;
   };
   emergencyContact: {
@@ -234,7 +234,6 @@ const MinimalTeacherForm: React.FC<MinimalTeacherFormProps> = ({ onBack, onSave,
     if (formData.sections.length === 0) newErrors.sections = "At least one section must be selected";
     if (!formData.address.city.trim()) newErrors['address.city'] = "City is required";
     if (!formData.address.state.trim()) newErrors['address.state'] = "State is required";
-    if (!formData.address.zipCode.trim()) newErrors['address.zipCode'] = "Zip code is required";
     if (!formData.qualifications[0].degree.trim()) newErrors['qualification.degree'] = "Degree is required";
     if (!formData.qualifications[0].institution.trim()) newErrors['qualification.institution'] = "Institution is required";
     if (!formData.emergencyContact.name.trim()) newErrors['emergency.name'] = "Emergency contact name is required";
@@ -281,6 +280,7 @@ const MinimalTeacherForm: React.FC<MinimalTeacherFormProps> = ({ onBack, onSave,
         qualifications: formData.qualifications,
         address: {
           ...formData.address,
+          zipCode: formData.address.zipCode?.trim() || undefined,
           country: formData.address.country || "Bangladesh", // Ensure country is always a string
         },
         emergencyContact: formData.emergencyContact,
@@ -413,7 +413,7 @@ const MinimalTeacherForm: React.FC<MinimalTeacherFormProps> = ({ onBack, onSave,
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth *</label>
-              <input
+              <input aria-label="dob"
                 type="date"
                 value={formData.dob}
                 onChange={(e) => handleChange("dob", e.target.value)}
@@ -424,7 +424,7 @@ const MinimalTeacherForm: React.FC<MinimalTeacherFormProps> = ({ onBack, onSave,
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Designation *</label>
-              <select
+              <select aria-label="designation"
                 value={formData.designation}
                 onChange={(e) => handleChange("designation", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -437,7 +437,7 @@ const MinimalTeacherForm: React.FC<MinimalTeacherFormProps> = ({ onBack, onSave,
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Blood Group *</label>
-              <select
+              <select aria-label="blood group"
                 value={formData.bloodGroup}
                 onChange={(e) => handleChange("bloodGroup", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -472,7 +472,7 @@ const MinimalTeacherForm: React.FC<MinimalTeacherFormProps> = ({ onBack, onSave,
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Join Date</label>
-              <input
+              <input aria-label="Join date"
                 type="date"
                 value={formData.joinDate || ""}
                 onChange={(e) => handleChange("joinDate", e.target.value)}
@@ -564,7 +564,7 @@ const MinimalTeacherForm: React.FC<MinimalTeacherFormProps> = ({ onBack, onSave,
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Experience (Total Years) *</label>
-              <input
+              <input aria-label="Experience"
                 type="number"
                 min="0"
                 max="45"
@@ -614,7 +614,7 @@ const MinimalTeacherForm: React.FC<MinimalTeacherFormProps> = ({ onBack, onSave,
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Year</label>
-              <input
+              <input aria-label="year"
                 type="number"
                 min="1980"
                 max={new Date().getFullYear()}
@@ -659,10 +659,10 @@ const MinimalTeacherForm: React.FC<MinimalTeacherFormProps> = ({ onBack, onSave,
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Zip Code *</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Zip Code</label>
               <input
                 type="text"
-                value={formData.address.zipCode}
+                value={formData.address.zipCode || ""}
                 onChange={(e) => handleNestedChange("address", "zipCode", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter zip code"
@@ -827,7 +827,7 @@ const MinimalTeacherForm: React.FC<MinimalTeacherFormProps> = ({ onBack, onSave,
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Grade *</label>
-                  <select
+                  <select aria-label="grade"
                     value={formData.classTeacherFor?.grade || ""}
                     onChange={(e) => handleNestedChange("classTeacherFor", "grade", parseInt(e.target.value))}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -840,7 +840,7 @@ const MinimalTeacherForm: React.FC<MinimalTeacherFormProps> = ({ onBack, onSave,
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Section *</label>
-                  <select
+                  <select aria-label="section"
                     value={formData.classTeacherFor?.section || ""}
                     onChange={(e) => handleNestedChange("classTeacherFor", "section", e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

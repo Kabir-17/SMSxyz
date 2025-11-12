@@ -74,20 +74,20 @@ declare const createTeacherValidationSchema: z.ZodObject<{
             street: z.ZodOptional<z.ZodString>;
             city: z.ZodString;
             state: z.ZodString;
-            zipCode: z.ZodString;
+            zipCode: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             country: z.ZodString;
         }, "strip", z.ZodTypeAny, {
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         }, {
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         }>;
         emergencyContact: z.ZodObject<{
             name: z.ZodString;
@@ -138,8 +138,8 @@ declare const createTeacherValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         };
         grades: number[];
         sections: string[];
@@ -192,8 +192,8 @@ declare const createTeacherValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         };
         grades: number[];
         sections: string[];
@@ -246,8 +246,8 @@ declare const createTeacherValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         };
         grades: number[];
         sections: string[];
@@ -300,8 +300,8 @@ declare const createTeacherValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         };
         grades: number[];
         sections: string[];
@@ -356,8 +356,8 @@ declare const createTeacherValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         };
         grades: number[];
         sections: string[];
@@ -412,8 +412,8 @@ declare const createTeacherValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         };
         grades: number[];
         sections: string[];
@@ -541,20 +541,20 @@ declare const updateTeacherValidationSchema: z.ZodObject<{
             street: z.ZodOptional<z.ZodString>;
             city: z.ZodString;
             state: z.ZodString;
-            zipCode: z.ZodString;
+            zipCode: z.ZodEffects<z.ZodOptional<z.ZodString>, string | undefined, unknown>;
             country: z.ZodString;
         }, "strip", z.ZodTypeAny, {
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         }, {
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         }>>;
         emergencyContact: z.ZodOptional<z.ZodObject<{
             name: z.ZodString;
@@ -607,8 +607,8 @@ declare const updateTeacherValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         } | undefined;
         grades?: number[] | undefined;
         sections?: string[] | undefined;
@@ -660,8 +660,8 @@ declare const updateTeacherValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         } | undefined;
         grades?: number[] | undefined;
         sections?: string[] | undefined;
@@ -718,8 +718,8 @@ declare const updateTeacherValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: string | undefined;
         } | undefined;
         grades?: number[] | undefined;
         sections?: string[] | undefined;
@@ -776,8 +776,8 @@ declare const updateTeacherValidationSchema: z.ZodObject<{
             city: string;
             state: string;
             country: string;
-            zipCode: string;
             street?: string | undefined;
+            zipCode?: unknown;
         } | undefined;
         grades?: number[] | undefined;
         sections?: string[] | undefined;

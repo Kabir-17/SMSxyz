@@ -36,7 +36,6 @@ interface NavItem {
 const navigation: NavItem[] = [
   { name: 'Dashboard', href: '', icon: Home, roles: ['superadmin', 'admin', 'teacher', 'student', 'parent', 'accountant'] },
   { name: 'Schools', href: '/schools', icon: GraduationCap, roles: ['superadmin'] },
-  { name: 'Reports', href: '/reports', icon: FileText, roles: ['superadmin'] },
   { name: 'Orange SMS', href: '/orange-sms', icon: Key, roles: ['superadmin'] },
   { name: 'Students', href: '/students', icon: Users, roles: ['admin', 'teacher'] },
   { name: 'Teachers', href: '/teachers', icon: User, roles: ['admin'] },
