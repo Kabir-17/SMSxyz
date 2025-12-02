@@ -163,7 +163,7 @@ class ComprehensiveSystemTester {
     await this.testWithTimer("Superadmin", "Login with Credentials", async () => {
       const response = await this.apiClient.post("/auth/login", {
         username: "superadmin",
-        password: "admin123",
+        password: "super123",
       });
 
       if (response.status !== 200 || !response.data.success) {
