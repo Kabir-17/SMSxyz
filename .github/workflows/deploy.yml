@@ -21,7 +21,28 @@ jobs:
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
           export PATH=$PATH:/home/ubuntu/.nvm/versions/node/v24.11.1/bin
-          cd /var/www/SMS-main_2
+          # Auto-detect directory
+          TARGET_DIR=""
+          if [ -d "/var/www/SMS" ]; then
+            TARGET_DIR="/var/www/SMS"
+          elif [ -d "/var/www/SMS-main_2" ]; then
+            TARGET_DIR="/var/www/SMS-main_2"
+          elif [ -d "/var/www/sms" ]; then
+            TARGET_DIR="/var/www/sms"
+          elif [ -d "/var/www/SMSxyz" ]; then
+            TARGET_DIR="/var/www/SMSxyz"
+          elif [ -d "/var/www/html" ] && [ -d "/var/www/html/backend" ]; then
+            TARGET_DIR="/var/www/html"
+          fi
+
+          if [ -z "$TARGET_DIR" ]; then
+            echo "Error: Application directory not found in /var/www"
+            ls -la /var/www
+            exit 1
+          fi
+
+          echo "Found application in $TARGET_DIR"
+          cd $TARGET_DIR
           
           # Pull latest changes
           echo "Pulling latest changes..."
