@@ -110,7 +110,7 @@ const LoginPage: React.FC = () => {
             EDUNETGN
           </h1>
           <p className="text-sm text-white/80">
-            Sign in to access your dashboard
+            Empowering Education, Simplifying Management.
           </p>
         </div>
 
