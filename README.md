@@ -389,3 +389,5 @@ For questions or support, please contact the development team.
 ---
 
 **Built with ❤️ by Abu Horaira(https://github.com/Ahnabu) & Habibur Rahman(https://github.com/habib-153)**
+C I / C D   P i p e l i n e   V e r i f i e d .  
+ 
