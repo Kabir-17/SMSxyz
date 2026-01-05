@@ -59,7 +59,7 @@ const LoginPage: React.FC = () => {
     return (
       <PasswordChangeModal
         isOpen={true}
-        onClose={() => {}} // Cannot close until password is changed
+        onClose={() => { }} // Cannot close until password is changed
       />
     );
   }
@@ -107,7 +107,7 @@ const LoginPage: React.FC = () => {
             <GraduationCap className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold mb-2 drop-shadow-md">
-            School Management
+            EDUNETGN
           </h1>
           <p className="text-sm text-white/80">
             Sign in to access your dashboard
