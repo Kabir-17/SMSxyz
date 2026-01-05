@@ -32,7 +32,7 @@ const createStudentValidationSchema = z.object({
       })
       .transform((val) => parseInt(val, 10))
       .refine((val) => !isNaN(val), "Grade must be a valid number")
-      .refine((val) => val >= 1 && val <= 12, "Grade must be between 1 and 12"),
+      .refine((val) => val >= 1 && val <= 13, "Grade must be between 1 and 13"),
     section: z
       .string()
       .default("A")
@@ -145,7 +145,7 @@ const updateStudentValidationSchema = z.object({
       .number()
       .int("Grade must be an integer")
       .min(1, "Grade must be at least 1")
-      .max(12, "Grade cannot exceed 12")
+      .max(13, "Grade cannot exceed 13")
       .optional(),
     section: z
       .string()
@@ -282,7 +282,7 @@ const getStudentsValidationSchema = z.object({
       .string()
       .regex(/^\d+$/, "Grade must be a number")
       .transform((val) => parseInt(val))
-      .refine((val) => val >= 1 && val <= 12, "Grade must be between 1 and 12")
+      .refine((val) => val >= 1 && val <= 13, "Grade must be between 1 and 13")
       .optional(),
     section: z
       .string()
@@ -362,7 +362,7 @@ const getStudentsByGradeAndSectionSchema = z.object({
       })
       .regex(/^\d+$/, "Grade must be a number")
       .transform((val) => parseInt(val))
-      .refine((val) => val >= 1 && val <= 12, "Grade must be between 1 and 12"),
+      .refine((val) => val >= 1 && val <= 13, "Grade must be between 1 and 13"),
     section: z
       .string({
         required_error: "Section is required",

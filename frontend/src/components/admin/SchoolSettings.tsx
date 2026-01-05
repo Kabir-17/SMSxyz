@@ -311,7 +311,7 @@ const SchoolSettingsComponent: React.FC<SchoolSettingsProps> = ({
       console.error("Failed to update school settings:", error);
       showToast(
         error.response?.data?.message ||
-          "Failed to update school settings. Please try again.",
+        "Failed to update school settings. Please try again.",
         "error"
       );
     } finally {
@@ -331,11 +331,10 @@ const SchoolSettingsComponent: React.FC<SchoolSettingsProps> = ({
     <button
       type="button"
       onClick={() => setActiveTab(id as any)}
-      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-        activeTab === id
+      className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === id
           ? "bg-blue-100 text-blue-700 border border-blue-200"
           : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-      }`}
+        }`}
     >
       <Icon className="w-4 h-4" />
       {label}
@@ -566,7 +565,7 @@ const SchoolSettingsComponent: React.FC<SchoolSettingsProps> = ({
                     Grades Offered
                   </label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                    {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                    {Array.from({ length: 13 }, (_, i) => i + 1).map(
                       (grade) => (
                         <label
                           key={grade}
@@ -833,7 +832,7 @@ const SchoolSettingsComponent: React.FC<SchoolSettingsProps> = ({
             <CardContent>
               <div className="space-y-6">
                 {formData.settings.grades.length === 0 ||
-                formData.settings.sections.length === 0 ? (
+                  formData.settings.sections.length === 0 ? (
                   <div className="text-center py-8">
                     <Layers className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">
@@ -884,13 +883,12 @@ const SchoolSettingsComponent: React.FC<SchoolSettingsProps> = ({
                                   Section {section}
                                 </h4>
                                 <span
-                                  className={`text-xs px-2 py-1 rounded-full ${
-                                    utilizationPercent > 90
+                                  className={`text-xs px-2 py-1 rounded-full ${utilizationPercent > 90
                                       ? "bg-red-100 text-red-800"
                                       : utilizationPercent > 75
-                                      ? "bg-yellow-100 text-yellow-800"
-                                      : "bg-green-100 text-green-800"
-                                  }`}
+                                        ? "bg-yellow-100 text-yellow-800"
+                                        : "bg-green-100 text-green-800"
+                                    }`}
                                 >
                                   {utilizationPercent.toFixed(0)}%
                                 </span>
@@ -903,13 +901,12 @@ const SchoolSettingsComponent: React.FC<SchoolSettingsProps> = ({
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-2">
                                   <div
-                                    className={`h-2 rounded-full transition-all duration-300 ${
-                                      utilizationPercent > 90
+                                    className={`h-2 rounded-full transition-all duration-300 ${utilizationPercent > 90
                                         ? "bg-red-500"
                                         : utilizationPercent > 75
-                                        ? "bg-yellow-500"
-                                        : "bg-green-500"
-                                    }`}
+                                          ? "bg-yellow-500"
+                                          : "bg-green-500"
+                                      }`}
                                     style={{
                                       width: `${Math.min(
                                         utilizationPercent,

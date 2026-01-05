@@ -17,8 +17,16 @@ import { useAuth } from "../../../context/AuthContext";
 import { showApiError, showToast } from "../../../utils/toast";
 import { CredentialsModal } from "../CredentialsModal";
 
+interface Address {
+  street: string;
+  city: string;
+  state: string;
+  country: string;
+  postalCode: string;
+}
+
 interface Student {
-  address: any;
+  address: Address;
   id?: string;
   studentId?: string;
   grade: number;
@@ -54,15 +62,15 @@ interface Student {
     relationship?: string;
   };
   photos?:
-    | Array<{
-        id: string;
-        photoPath: string;
-        photoNumber: number;
-        filename: string;
-        size: number;
-        createdAt: string;
-      }>
-    | File[]; // Support both response and upload
+  | Array<{
+    id: string;
+    photoPath: string;
+    photoNumber: number;
+    filename: string;
+    size: number;
+    createdAt: string;
+  }>
+  | File[]; // Support both response and upload
   photoCount?: number;
   createdAt?: string;
   updatedAt?: string;
@@ -87,7 +95,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
   isOpen,
   onClose,
   onSave,
-}) => {
+}: StudentFormProps) => {
   const { user } = useAuth();
   const [formData, setFormData] = useState<Student>({
     grade: 9,
@@ -98,6 +106,13 @@ const StudentForm: React.FC<StudentFormProps> = ({
     admissionDate: new Date().toISOString().split("T")[0],
     schoolId: user?.schoolId || "",
     firstName: "",
+    address: {
+      street: "",
+      city: "",
+      state: "",
+      country: "",
+      postalCode: "",
+    },
     lastName: "",
     email: "",
     phone: "",
@@ -113,13 +128,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
       occupation: "",
       relationship: "",
     },
-    address: {
-      street: "",
-      city: "",
-      state: "",
-      country: "",
-      postalCode: "",
-    },
+
     photos: [],
   });
 
@@ -149,13 +158,13 @@ const StudentForm: React.FC<StudentFormProps> = ({
   // Load school data to get grade configuration
   useEffect(() => {
     const loadSchoolData = async () => {
-      
+
       if (!user?.schoolId) {
         console.error('No schoolId found in user context');
         setLoadingSchool(false);
         return;
       }
-      
+
       setLoadingSchool(true);
       try {
         const response = await adminApi.getSchoolSettings();
@@ -465,7 +474,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
   const handleInputChange = (field: string, value: any) => {
     if (field.startsWith("parent.")) {
       const parentField = field.replace("parent.", "");
-      setFormData((prev) => ({
+      setFormData((prev: Student) => ({
         ...prev,
         parent: {
           ...prev.parent,
@@ -476,7 +485,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
       }));
     } else if (field.startsWith("address.")) {
       const addressField = field.replace("address.", "");
-      setFormData((prev) => ({
+      setFormData((prev: Student) => ({
         ...prev,
         address: {
           ...prev.address,
@@ -484,7 +493,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
         },
       }));
     } else {
-      setFormData((prev) => ({ ...prev, [field]: value }));
+      setFormData((prev: Student) => ({ ...prev, [field]: value }));
     }
   };
 
@@ -496,7 +505,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
     // Validate file count
     if (selectedPhotos.length + newFiles.length > 8) {
-      setErrors((prev) => ({ ...prev, photos: "Maximum 8 photos allowed" }));
+      setErrors((prev: Record<string, string>) => ({ ...prev, photos: "Maximum 8 photos allowed" }));
       return;
     }
 
@@ -506,7 +515,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
     newFiles.forEach((file) => {
       if (!file.type.startsWith("image/")) {
-        setErrors((prev) => ({
+        setErrors((prev: Record<string, string>) => ({
           ...prev,
           photos: "Only image files are allowed",
         }));
@@ -515,7 +524,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
 
       if (file.size > 10 * 1024 * 1024) {
         // 10MB
-        setErrors((prev) => ({
+        setErrors((prev: Record<string, string>) => ({
           ...prev,
           photos: "Each photo must be under 10MB",
         }));
@@ -530,7 +539,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
         if (e.target?.result) {
           previews.push(e.target.result as string);
           if (previews.length === validFiles.length) {
-            setPhotoPreview((prev) => [...prev, ...previews]);
+            setPhotoPreview((prev: string[]) => [...prev, ...previews]);
           }
         }
       };
@@ -550,8 +559,8 @@ const StudentForm: React.FC<StudentFormProps> = ({
   };
 
   const removePhoto = (index: number) => {
-    setSelectedPhotos((prev) => prev.filter((_, i) => i !== index));
-    setPhotoPreview((prev) => prev.filter((_, i) => i !== index));
+    setSelectedPhotos((prev: File[]) => prev.filter((_: File, i: number) => i !== index));
+    setPhotoPreview((prev: string[]) => prev.filter((_: string, i: number) => i !== index));
     setFormData((prev) => ({
       ...prev,
       photos: (prev.photos?.filter((_, i) => i !== index) || []) as File[],
@@ -672,9 +681,8 @@ const StudentForm: React.FC<StudentFormProps> = ({
                     }
                   >
                     <SelectTrigger
-                      className={`w-full ${
-                        errors.grade ? "border-red-500" : ""
-                      }`}
+                      className={`w-full ${errors.grade ? "border-red-500" : ""
+                        }`}
                     >
                       <SelectValue placeholder="Select Grade" />
                     </SelectTrigger>
@@ -699,6 +707,7 @@ const StudentForm: React.FC<StudentFormProps> = ({
                           <SelectItem value="10">Grade 10</SelectItem>
                           <SelectItem value="11">Grade 11</SelectItem>
                           <SelectItem value="12">Grade 12</SelectItem>
+                          <SelectItem value="13">Grade 13</SelectItem>
                         </>
                       )}
                     </SelectContent>
@@ -718,9 +727,8 @@ const StudentForm: React.FC<StudentFormProps> = ({
                     }
                   >
                     <SelectTrigger
-                      className={`w-full ${
-                        errors.section ? "border-red-500" : ""
-                      }`}
+                      className={`w-full ${errors.section ? "border-red-500" : ""
+                        }`}
                     >
                       <SelectValue placeholder="Select Section" />
                     </SelectTrigger>
