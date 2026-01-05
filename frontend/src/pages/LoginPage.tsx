@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { Mail, Lock, Eye, EyeOff, GraduationCap } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, GraduationCap, Globe } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import {
@@ -14,11 +14,46 @@ import PasswordChangeModal from "@/components/PasswordChangeModal";
 import { useAuth } from "../context/AuthContext";
 
 // Inclusive classroom photo from Pexels (free-to-use license).
-// const BACKGROUND_IMAGE_URL =
-//   "../../public/mixed-races-boy-little-girl-park.jpg";
-// Background image served from the app `public/` folder.
-// Use an absolute path so the production build (Vite/Netlify) can find it at the site root.
 const BACKGROUND_IMAGE_URL = "/mixed-races-boy-little-girl-park.jpg";
+
+const translations = {
+  en: {
+    tagline: "Empowering Education, Simplifying Management.",
+    welcome: "Welcome back",
+    enterCredentials: "Enter your credentials to access your account",
+    username: "Username",
+    enterUsername: "Enter your username",
+    password: "Password",
+    enterPassword: "Enter your password",
+    signIn: "Sign in",
+    signingIn: "Signing in...",
+    needHelp: "Need Help with Login?",
+    passwordRecovery: "For Password Recovery:",
+    admins: "Admins:",
+    contactSuperadmin: "Contact your Superadmin for password reset",
+    otherRoles: "Teachers & Students/Parents:",
+    contactSchoolAdmin: "Contact your School Admin",
+    credentialsNote: "Login credentials are provided by your school administration"
+  },
+  fr: {
+    tagline: "Autonomiser l'éducation, simplifier la gestion.",
+    welcome: "Bon retour",
+    enterCredentials: "Entrez vos identifiants pour accéder à votre compte",
+    username: "Nom d'utilisateur",
+    enterUsername: "Entrez votre nom d'utilisateur",
+    password: "Mot de passe",
+    enterPassword: "Entrez votre mot de passe",
+    signIn: "Se connecter",
+    signingIn: "Connexion en cours...",
+    needHelp: "Besoin d'aide pour vous connecter ?",
+    passwordRecovery: "Pour la récupération du mot de passe :",
+    admins: "Administrateurs :",
+    contactSuperadmin: "Contactez votre Superadmin pour la réinitialisation",
+    otherRoles: "Enseignants et Élèves/Parents :",
+    contactSchoolAdmin: "Contactez votre administrateur scolaire",
+    credentialsNote: "Les identifiants sont fournis par l'administration de l'école"
+  }
+};
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -26,8 +61,11 @@ const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [lang, setLang] = useState<'en' | 'fr'>('en');
 
   const { login, isAuthenticated, user, requiresPasswordChange } = useAuth();
+
+  const t = translations[lang];
 
   useEffect(() => {
     setError("");
@@ -100,6 +138,17 @@ const LoginPage: React.FC = () => {
       <div className="pointer-events-none absolute bottom-[-6rem] right-[-4rem] h-80 w-80 rounded-full bg-sky-400/20 blur-3xl animate-float-soft-reverse" />
       <div className="pointer-events-none absolute top-1/3 right-1/5 h-24 w-24 rounded-3xl border border-white/30 backdrop-blur-sm animate-pulse" />
 
+      {/* Language Toggle Button */}
+      <div className="absolute top-4 right-4 z-20">
+        <button
+          onClick={() => setLang(lang === 'en' ? 'fr' : 'en')}
+          className="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-white transition-all border border-white/20 shadow-lg"
+        >
+          <Globe className="w-4 h-4" />
+          <span className="text-sm font-medium">{lang === 'en' ? 'Français' : 'English'}</span>
+        </button>
+      </div>
+
       <div className="relative z-10 w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8 text-white/90">
@@ -110,16 +159,16 @@ const LoginPage: React.FC = () => {
             EDUNETGN
           </h1>
           <p className="text-sm text-white/80">
-            Empowering Education, Simplifying Management.
+            {t.tagline}
           </p>
         </div>
 
         {/* Login Form */}
         <Card className="bg-white/20 backdrop-blur-sm border border-white/25 shadow-[0_18px_45px_rgba(15,23,42,0.35)]">
           <CardHeader className="text-center">
-            <CardTitle className="text-4xl">Welcome back</CardTitle>
+            <CardTitle className="text-4xl">{t.welcome}</CardTitle>
             <CardDescription className="text-white">
-              Enter your credentials to access your account
+              {t.enterCredentials}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -131,12 +180,12 @@ const LoginPage: React.FC = () => {
               )}
 
               <Input
-                label="Username"
+                label={t.username}
                 name="username"
                 type="text"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your username"
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                placeholder={t.enterUsername}
                 required
                 disabled={isLoading}
                 icon={<Mail className="w-4 h-4 text-gray-400" />}
@@ -144,12 +193,12 @@ const LoginPage: React.FC = () => {
 
               <div className="relative">
                 <Input
-                  label="Password"
+                  label={t.password}
                   name="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                  placeholder={t.enterPassword}
                   required
                   disabled={isLoading}
                   icon={<Lock className="w-4 h-4 text-gray-400" />}
@@ -172,9 +221,8 @@ const LoginPage: React.FC = () => {
                 className="w-full shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-shadow"
                 disabled={!username || !password || isLoading}
               >
-                {isLoading ? "Signing in..." : "Sign in"}
+                {isLoading ? t.signingIn : t.signIn}
               </Button>
-
 
             </form>
           </CardContent>
@@ -197,27 +245,25 @@ const LoginPage: React.FC = () => {
                   d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <h3 className="font-semibold">Need Help with Login?</h3>
+              <h3 className="font-semibold">{t.needHelp}</h3>
             </div>
 
             <div className="space-y-3 text-gray-700">
               <div className="bg-gradient-to-r from-blue-50/90 to-blue-100/90 p-3 rounded-lg border border-blue-200/70">
                 <p className="font-medium text-blue-900 text-sm mb-2">
-                  For Password Recovery:
+                  {t.passwordRecovery}
                 </p>
                 <div className="space-y-1 text-xs text-blue-800">
                   <div className="flex items-start">
                     <span className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                     <span>
-                      <strong>Admins:</strong> Contact your Superadmin for
-                      password reset
+                      <strong>{t.admins}</strong> {t.contactSuperadmin}
                     </span>
                   </div>
                   <div className="flex items-start">
                     <span className="w-2 h-2 bg-green-500 rounded-full mt-1.5 mr-2 flex-shrink-0"></span>
                     <span>
-                      <strong>Teachers & Students/Parents:</strong> Contact your
-                      School Admin
+                      <strong>{t.otherRoles}</strong> {t.contactSchoolAdmin}
                     </span>
                   </div>
                 </div>
@@ -225,7 +271,7 @@ const LoginPage: React.FC = () => {
 
               <div className="bg-amber-50/90 p-3 rounded-lg border border-amber-200/70 text-center">
                 <p className="text-amber-800 font-medium text-sm">
-                  Login credentials are provided by your school administration
+                  {t.credentialsNote}
                 </p>
               </div>
             </div>
