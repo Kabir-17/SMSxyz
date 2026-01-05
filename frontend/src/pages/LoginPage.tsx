@@ -175,17 +175,7 @@ const LoginPage: React.FC = () => {
                 {isLoading ? "Signing in..." : "Sign in"}
               </Button>
 
-              <div className="text-center">
-                <button
-                  type="button"
-                  className="text-sm text-primary-600 hover:text-primary-500 transition-colors"
-                  onClick={() => {
-                    alert("Forgot password feature coming soon!");
-                  }}
-                >
-                  Forgot your password?
-                </button>
-              </div>
+
             </form>
           </CardContent>
         </Card>
