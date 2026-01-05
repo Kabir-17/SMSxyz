@@ -103,6 +103,7 @@ const createSchoolValidationSchema = z.object({
     adminDetails: adminDetailsValidationSchema,
     affiliation: z.string().max(100, 'Affiliation cannot exceed 100 characters').optional(),
     recognition: z.string().max(200, 'Recognition cannot exceed 200 characters').optional(),
+    settings: settingsValidationSchema.optional(),
     logo: z.string().url('Invalid logo URL').optional(),
   }),
 });
