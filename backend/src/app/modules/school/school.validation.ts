@@ -21,7 +21,7 @@ const addressValidationSchema = z.object({
   postalCode: optionalTrimmedString(
     z.string().max(20, 'Postal code cannot exceed 20 characters')
   ),
-  coordinates: z.object({  
+  coordinates: z.object({
     latitude: z.number().min(-90).max(90),
     longitude: z.number().min(-180).max(180)
   }).optional()
@@ -58,7 +58,7 @@ const settingsValidationSchema = z.object({
     .min(1, 'Maximum students per section must be at least 1')
     .optional(),
   grades: z
-    .array(z.number().min(1).max(12))
+    .array(z.number().min(1).max(13))
     .min(1, 'At least one grade must be specified')
     .optional(),
   sections: z
@@ -122,11 +122,7 @@ const updateSchoolValidationSchema = z.object({
       .max(100, 'School name cannot exceed 100 characters')
       .trim()
       .optional(),
-    address: z
-      .string()
-      .max(200, 'Address cannot exceed 200 characters')
-      .trim()
-      .optional(),
+    address: addressValidationSchema.optional(),
     phone: z
       .string()
       .optional(),
