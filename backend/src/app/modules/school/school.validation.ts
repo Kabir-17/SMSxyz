@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const optionalTrimmedString = (schema: z.ZodString) =>
   z.preprocess(
-    (val) => {
+    (val: unknown) => {
       if (typeof val !== 'string') {
         return val;
       }
@@ -165,15 +165,15 @@ const getSchoolsValidationSchema = z.object({
     page: z
       .string()
       .regex(/^\d+$/, 'Page must be a positive number')
-      .transform((val) => parseInt(val))
-      .refine((val) => val > 0, 'Page must be greater than 0')
+      .transform((val: string) => parseInt(val))
+      .refine((val: number) => val > 0, 'Page must be greater than 0')
       .optional()
       .default('1'),
     limit: z
       .string()
       .regex(/^\d+$/, 'Limit must be a positive number')
-      .transform((val) => parseInt(val))
-      .refine((val) => val > 0 && val <= 100, 'Limit must be between 1 and 100')
+      .transform((val: string) => parseInt(val))
+      .refine((val: number) => val > 0 && val <= 100, 'Limit must be between 1 and 100')
       .optional()
       .default('20'),
     orgId: z
