@@ -34,7 +34,7 @@ export async function seedSampleSubjects(schoolId?: string): Promise<void> {
         name: 'Mathematics',
         code: 'MATH',
         description: 'Core mathematics curriculum',
-        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
         isCore: true,
         credits: 4,
         teachers: [],
@@ -45,7 +45,7 @@ export async function seedSampleSubjects(schoolId?: string): Promise<void> {
         name: 'English Language Arts',
         code: 'ELA',
         description: 'English language and literature',
-        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
         isCore: true,
         credits: 4,
         teachers: [],
@@ -56,7 +56,7 @@ export async function seedSampleSubjects(schoolId?: string): Promise<void> {
         name: 'Science',
         code: 'SCI',
         description: 'General science curriculum',
-        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
         isCore: true,
         credits: 3,
         teachers: [],
@@ -67,7 +67,7 @@ export async function seedSampleSubjects(schoolId?: string): Promise<void> {
         name: 'Social Studies',
         code: 'SS',
         description: 'History and social sciences',
-        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
         isCore: true,
         credits: 3,
         teachers: [],
@@ -78,7 +78,7 @@ export async function seedSampleSubjects(schoolId?: string): Promise<void> {
         name: 'Physical Education',
         code: 'PE',
         description: 'Physical education and health',
-        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
         isCore: false,
         credits: 2,
         teachers: [],
@@ -89,7 +89,7 @@ export async function seedSampleSubjects(schoolId?: string): Promise<void> {
         name: 'Art',
         code: 'ART',
         description: 'Visual arts and creative expression',
-        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        grades: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
         isCore: false,
         credits: 1,
         teachers: [],
@@ -182,7 +182,7 @@ export async function seedDatabase(): Promise<void> {
 export async function validateSeeding(): Promise<boolean> {
   try {
     const superadmin = await User.findOne({ role: UserRole.SUPERADMIN });
-    
+
     if (!superadmin) {
       console.error('❌ Validation failed: No superadmin user found');
       return false;

@@ -99,6 +99,7 @@ const FeeStructureManagement: React.FC = () => {
         "10",
         "11",
         "12",
+        "13",
       ]);
     }
   };
@@ -454,8 +455,8 @@ const FeeStructureManagement: React.FC = () => {
                                 {component.feeType === FeeType.ADMISSION
                                   ? "🎓"
                                   : component.feeType === FeeType.ANNUAL
-                                  ? "📅"
-                                  : "⚡"}{" "}
+                                    ? "📅"
+                                    : "⚡"}{" "}
                                 {component.feeType}
                               </span>
                               <span className="font-bold text-orange-800">
@@ -649,11 +650,10 @@ const FeeStructureManagement: React.FC = () => {
                       return (
                         <div
                           key={index}
-                          className={`p-3 border rounded-lg space-y-2 ${
-                            isOneTimeFee
+                          className={`p-3 border rounded-lg space-y-2 ${isOneTimeFee
                               ? "border-orange-300 bg-orange-50"
                               : "border-gray-200"
-                          }`}
+                            }`}
                         >
                           <div className="grid grid-cols-2 gap-2">
                             <div>
@@ -801,11 +801,10 @@ const FeeStructureManagement: React.FC = () => {
                                     className="mr-1.5 text-orange-600 focus:ring-orange-500"
                                   />
                                   <span
-                                    className={`font-medium ${
-                                      isOneTimeFee
+                                    className={`font-medium ${isOneTimeFee
                                         ? "text-orange-600"
                                         : "text-gray-600"
-                                    }`}
+                                      }`}
                                   >
                                     One-Time
                                   </span>

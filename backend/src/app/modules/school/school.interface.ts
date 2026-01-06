@@ -28,7 +28,7 @@ export interface ISchoolContact {
 
 export interface ISchoolSettings {
   maxStudentsPerSection: number;
-  grades: number[]; // Grades offered (1-12)
+  grades: number[]; // Grades offered (1-13)
   sections: string[]; // Available sections (A, B, C, etc.)
   academicYearStart: number; // Month (1-12)
   academicYearEnd: number; // Month (1-12)
@@ -60,45 +60,45 @@ export interface IAcademicSession {
 export interface ISchool {
   // Legacy field - keeping for backward compatibility but not required for new schools
   orgId?: Types.ObjectId;
-  
+
   // Basic Information
   name: string;
   slug: string; // URL-friendly version of name
   schoolId: string; // Unique identifier (e.g., "SCH001")
   establishedYear?: number;
-  
+
   // Contact Information
   address: ISchoolAddress;
   contact: ISchoolContact;
-  
+
   // Administrative
   status: SchoolStatus;
   adminUserId: Types.ObjectId; // Reference to admin user in User collection
-  
+
   // Educational Details
   affiliation?: string; // e.g., "CBSE", "ICSE", "State Board"
   recognition?: string; // Government recognition details
-  
+
   // Settings
   settings: ISchoolSettings;
-  
+
   // Academic Sessions
   currentSession?: IAcademicSession;
   academicSessions: IAcademicSession[];
-  
+
   // API Configuration for face recognition app
   apiEndpoint: string; // Dynamic API endpoint for this school
   apiKey: string; // Unique API key for face recognition app
-  
+
   // Media
   logo?: string; // URL to school logo
   images?: string[]; // Additional school images
-  
+
   // Metadata
   isActive: boolean;
   createdBy: Types.ObjectId; // Super admin who created this school
   lastModifiedBy?: Types.ObjectId;
-  
+
   // Statistics (cached for performance)
   stats?: {
     totalStudents: number;
@@ -109,7 +109,7 @@ export interface ISchool {
     attendanceRate: number;
     lastUpdated: Date;
   };
-  
+
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -174,7 +174,7 @@ export interface ICreateSchoolRequest {
   currentSession?: Omit<IAcademicSession, 'isActive'>;
   settings?: Partial<ISchoolSettings>;
   logo?: string;
-  
+
   // Legacy support
   orgId?: string; // Optional for backward compatibility
 }
@@ -228,7 +228,7 @@ export interface ISchoolResponse {
   };
   createdAt: Date;
   updatedAt: Date;
-  
+
   // Legacy fields for backward compatibility
   orgId?: string;
   studentsCount?: number;

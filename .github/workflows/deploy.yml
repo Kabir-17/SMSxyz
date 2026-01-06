@@ -20,6 +20,7 @@ jobs:
         username: ${{ secrets.VPS_USERNAME }}
         password: ${{ secrets.VPS_PASSWORD }}
         script: |
+          export PATH=$PATH:/home/ubuntu/.nvm/versions/node/v24.11.1/bin
           cd /var/www/SMS
           
           # Pull latest changes

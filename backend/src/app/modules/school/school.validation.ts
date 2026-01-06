@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const optionalTrimmedString = (schema: z.ZodString) =>
   z.preprocess(
-    (val) => {
+    (val: unknown) => {
       if (typeof val !== 'string') {
         return val;
       }
@@ -21,7 +21,7 @@ const addressValidationSchema = z.object({
   postalCode: optionalTrimmedString(
     z.string().max(20, 'Postal code cannot exceed 20 characters')
   ),
-  coordinates: z.object({  
+  coordinates: z.object({
     latitude: z.number().min(-90).max(90),
     longitude: z.number().min(-180).max(180)
   }).optional()
@@ -58,7 +58,7 @@ const settingsValidationSchema = z.object({
     .min(1, 'Maximum students per section must be at least 1')
     .optional(),
   grades: z
-    .array(z.number().min(1).max(12))
+    .array(z.number().min(1).max(13))
     .min(1, 'At least one grade must be specified')
     .optional(),
   sections: z
@@ -103,6 +103,7 @@ const createSchoolValidationSchema = z.object({
     adminDetails: adminDetailsValidationSchema,
     affiliation: z.string().max(100, 'Affiliation cannot exceed 100 characters').optional(),
     recognition: z.string().max(200, 'Recognition cannot exceed 200 characters').optional(),
+    settings: settingsValidationSchema.optional(),
     logo: z.string().url('Invalid logo URL').optional(),
   }),
 });
@@ -122,11 +123,7 @@ const updateSchoolValidationSchema = z.object({
       .max(100, 'School name cannot exceed 100 characters')
       .trim()
       .optional(),
-    address: z
-      .string()
-      .max(200, 'Address cannot exceed 200 characters')
-      .trim()
-      .optional(),
+    address: addressValidationSchema.optional(),
     phone: z
       .string()
       .optional(),
@@ -169,15 +166,15 @@ const getSchoolsValidationSchema = z.object({
     page: z
       .string()
       .regex(/^\d+$/, 'Page must be a positive number')
-      .transform((val) => parseInt(val))
-      .refine((val) => val > 0, 'Page must be greater than 0')
+      .transform((val: string) => parseInt(val))
+      .refine((val: number) => val > 0, 'Page must be greater than 0')
       .optional()
       .default('1'),
     limit: z
       .string()
       .regex(/^\d+$/, 'Limit must be a positive number')
-      .transform((val) => parseInt(val))
-      .refine((val) => val > 0 && val <= 100, 'Limit must be between 1 and 100')
+      .transform((val: string) => parseInt(val))
+      .refine((val: number) => val > 0 && val <= 100, 'Limit must be between 1 and 100')
       .optional()
       .default('20'),
     orgId: z
